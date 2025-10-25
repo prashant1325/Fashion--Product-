@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trade Approvals - Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+body { min-height:100vh; background: linear-gradient(135deg, #000, #0a0a0a); color: #fff; }
+
+.navbar {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 40px; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+  position: fixed; top:0; left:0; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.5);
+}
+.navbar h1 { font-size:24px; color:#00ffcc; }
+.navbar ul { list-style:none; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+.navbar ul li a { text-decoration:none; color:#fff; padding:8px 12px; border-radius:6px; transition:0.3s; font-weight:500; }
+.navbar ul li a:hover { background:#00ffcc; color:#000; }
+#logoutBtn { background:#e53935; color:#fff; padding:8px 15px; border-radius:6px; transition:0.3s ease; }
+#logoutBtn:hover { background:#ff4444; transform:scale(1.05); }
+
+.main { margin-top:110px; padding:30px 40px; }
+.main h2 { color:#00ffcc; text-align:center; margin-bottom:25px; }
+
+table { width:100%; border-collapse:collapse; background: rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+thead { background: rgba(0,255,204,0.1); }
+th, td { padding:14px 16px; text-align:left; color:#ddd; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:middle; }
+th { color:#00ffcc; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
+tr:hover { background: rgba(255,255,255,0.12); transition:0.3s; }
+
+.btn-approve, .btn-reject, .btn-delete {
+  padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-weight:500; margin-right:5px; transition:0.3s ease;
+}
+.btn-approve { background:#00ffcc; color:#000; }
+.btn-approve.approved { background:#4caf50; color:#fff; }
+.btn-approve:hover { background:#fff; transform:scale(1.05); }
+
+.btn-reject { background:#e53935; color:#fff; }
+.btn-reject.rejected { background:#9c27b0; color:#fff; }
+.btn-reject:hover { background:#ff4444; transform:scale(1.05); }
+
+.btn-delete { background:#ff9900; color:#000; }
+.btn-delete:hover { background:#ffaa33; transform:scale(1.05); }
+
+.product-img { width:60px; height:60px; border-radius:8px; object-fit:cover; border:1px solid #00ffcc; }
+
+#toast {
+  position: fixed; bottom: 30px; right: 30px; background: #333; color:#fff;
+  padding: 15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  opacity:0; transform: translateY(50px); transition: 0.4s; z-index:10000;
+}
+#toast.show { opacity:1; transform: translateY(0); }
+
+footer { margin-top:50px; text-align:center; padding:20px; background: rgba(0,0,0,0.75); color:#aaa; font-size:14px; }
+
+@media(max-width:768px){
+  table { font-size:13px; }
+  .navbar { flex-direction:column; align-items:flex-start; }
+  .navbar ul { gap:10px; margin-top:10px; }
+  .main { padding:20px; }
+  .btn-approve, .btn-reject, .btn-delete { margin-bottom:5px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <h1>Admin Panel</h1>
+  <ul>
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="manage-users.html">Manage Users</a></li>
+    <li><a href="product-listing.html">Product Listing</a></li>
+    <li><a href="buy-approval.html">Buy Approvals</a></li>
+    <li><a href="sell-approval.html">Sell Approvals</a></li>
+    <li><a href="trade-approval.html">Trade Approvals</a></li>
+    <li><a href="#" id="logoutBtn">Logout</a></li>
+  </ul>
+</nav>
+
+<div class="main">
+  <h2>Pending Trade Requests</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Condition</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="tradeRequestsTable"></tbody>
+  </table>
+</div>
+
+<div id="toast"></div>
+<footer>© 2025 UpStyle Marketplace | Admin Panel</footer>
+
+<script>
+const API_URL = 'http://localhost:5000/api/trades';
+
+// Toast
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2500);
+}
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  if(confirm("Are you sure you want to logout?")){
+    localStorage.removeItem("token");
+    window.location.href = "../index.html";
+  }
+});
+
+// Load trades
+async function loadTrades(){
+  try{
+    const res = await fetch(API_URL);
+    const trades = await res.json();
+    const tbody = document.getElementById('tradeRequestsTable');
+    tbody.innerHTML = '';
+    if(trades.length===0){
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#888;">No trade requests found</td></tr>`;
+      return;
+    }
+
+    trades.forEach(trade=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><img src="${trade.image||''}" class="product-img"></td>
+        <td>${trade.title||'-'}</td>
+        <td>${trade.condition||'-'}</td>
+        <td>${trade.description||'-'}</td>
+        <td>${trade.status||'Pending'}</td>
+        <td>
+          <button class="btn-approve">Approve</button>
+          <button class="btn-reject">Reject</button>
+          <button class="btn-delete">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+
+      const btnApprove = tr.querySelector('.btn-approve');
+      const btnReject = tr.querySelector('.btn-reject');
+      const btnDelete = tr.querySelector('.btn-delete');
+
+      updateButtonColors(trade, btnApprove, btnReject);
+
+      btnApprove.addEventListener('click', async ()=>{
+        const ok = await updateTradeStatus(trade._id,'Approved');
+        if(ok){
+          trade.status='Approved';
+          tr.cells[4].textContent='Approved';
+          updateButtonColors(trade,btnApprove,btnReject);
+          showToast(`${trade.title} approved`);
+        }
+      });
+
+      btnReject.addEventListener('click', async ()=>{
+        const ok = await updateTradeStatus(trade._id,'Rejected');
+        if(ok){
+          trade.status='Rejected';
+          tr.cells[4].textContent='Rejected';
+          updateButtonColors(trade,btnApprove,btnReject);
+          showToast(`${trade.title} rejected`);
+        }
+      });
+
+      btnDelete.addEventListener('click', async ()=>{
+        if(!confirm('Delete this trade?')) return;
+        const res = await fetch(`${API_URL}/${trade._id}`, {method:'DELETE'});
+        if(res.ok){ showToast('Trade deleted'); loadTrades(); }
+      });
+    });
+
+  }catch(err){ console.error(err); showToast('Failed to load trades'); }
+}
+
+// Update button colors dynamically
+function updateButtonColors(trade, btnApprove, btnReject){
+  btnApprove.classList.remove('approved');
+  btnReject.classList.remove('rejected');
+  if(trade.status==='Approved') btnApprove.classList.add('approved');
+  else if(trade.status==='Rejected') btnReject.classList.add('rejected');
+}
+
+// Update status API
+async function updateTradeStatus(id,status){
+  try{
+    const res = await fetch(`${API_URL}/${id}`, {
+      method:'PATCH', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({status})
+    });
+    return res.ok;
+  }catch(err){ console.error(err); return false; }
+}
+
+// Initial load
+loadTrades();
+</script>
+</body>
+</html>

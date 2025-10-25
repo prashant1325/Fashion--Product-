@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel - Upstyle Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #000000, #0a0a0a);
+      color: #fff;
+    }
+
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .navbar h1 {
+      font-size: 24px;
+      color: #00ffcc;
+      letter-spacing: 1px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: 0.3s;
+      font-weight: 500;
+    }
+
+  
+
+    /* Special style for Logout */
+    #logoutBtn {
+      background: #e53935;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 6px;
+      transition: 0.3s ease;
+    }
+
+    #logoutBtn:hover {
+      background: #ff4444;
+      transform: scale(1.05);
+    }
+
+    /* Main content */
+    .main {
+      margin-top: 110px;
+      padding: 30px 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .card h2 {
+      color: #00ffcc;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #00ffcc;
+      color: #000;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 12px;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #fff;
+      transform: scale(1.05);
+    }
+
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #aaa;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h1>Admin Panel</h1>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="manage-users.html">Manage Users</a></li>
+      <li><a href="product-listing.html">Product Listing</a></li>
+      <li><a href="buy-approval.html">Buy Approvals</a></li>
+      <li><a href="sell-approval.html">Sell Approvals</a></li>
+      <li><a href="trade-approval.html">Trade Approvals</a></li>
+      
+
+      <li><a href="#" id="logoutBtn">Logout</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <div class="card" id="manageUsers">
+      <h2>Manage Users</h2>
+      <p>View all registered users, edit roles, or delete accounts.</p>
+      <a href="manage-users.html" class="btn">Go</a>
+    </div>
+
+    <div class="card" id="productListing">
+      <h2>Product Listing</h2>
+      <p>Check all products submitted by users. Edit or remove items if needed.</p>
+      <a href="product-listing.html" class="btn">Go</a>
+    </div>
+
+    <div class="card" id="buyApproval">
+      <h2>Buy Approvals</h2>
+      <p>Approve or reject buy requests submitted by users.</p>
+      <a href="buy-approval.html" class="btn">Go</a>
+    </div>
+
+    <div class="card" id="sellApproval">
+      <h2>Sell Approvals</h2>
+      <p>Approve or reject sell requests submitted by users.</p>
+      <a href="sell-approval.html" class="btn">Go</a>
+    </div>
+
+    <div class="card" id="tradeApproval">
+      <h2>Trade Approvals</h2>
+      <p>Approve or reject trade requests submitted by users.</p>
+      <a href="trade-approval.html" class="btn">Go</a>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2025 Upstyle Marketplace | Admin Panel
+  </footer>
+
+  <script>
+    // Logout Function
+    const logoutBtn = document.getElementById('logoutBtn');
+    logoutBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '../index.html';
+      }
+    });
+  </script>
+
+</body>
+</html>

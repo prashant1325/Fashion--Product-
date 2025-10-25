@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sell</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+body { min-height:100vh; display:flex; flex-direction:column; background:#111; color:#fff; }
+body::before {
+  content:''; position:fixed; top:0; left:0; width:100%; height:100%;
+  background: url("img/sell.jpg") no-repeat center/cover; filter: blur(2px); z-index:-1;
+}
+.navbar { width:100%; display:flex; justify-content:space-between; align-items:center; padding:15px 50px; position:fixed; top:0; left:0; background:black; backdrop-filter: blur(8px); z-index:1000; }
+.navbar h2 { color:#fff; font-size:26px; font-weight:700; }
+.navbar ul { list-style:none; display:flex; align-items:center; gap:25px; }
+.navbar ul li a { text-decoration:none; color:#fff; font-weight:500; font-size:16px; padding:6px 12px; border-radius:5px; }
+.navbar ul li button { padding:8px 16px; border:none; border-radius:6px; background:#ff4d4d; color:#fff; cursor:pointer; }
+.page-title { margin-top:180px; text-align:center; font-size:28px; font-weight:700; color: black; text-shadow: 2px 2px 6px white; }
+.sell-form { width:100%; max-width:600px; margin:40px auto; padding:30px; display:flex; flex-direction:column; gap:15px; background: rgba(207,207,207,0.1); backdrop-filter: blur(6px); border-radius:20px; border:3px solid black; }
+.sell-form input, .sell-form textarea { padding:12px 15px; border-radius:10px; border:2px solid #fff; outline:none; font-size:16px; width:100%; background: rgba(255,255,255,0.9); color:#000; }
+.sell-form textarea { min-height:120px; resize: vertical; }
+.drag-drop { border: 4px dashed black; border-radius: 12px; padding: 25px; text-align: center; font-size: 16px; color: rgb(5,5,255); cursor: pointer; background: rgba(255,255,255,0.8); }
+.drag-drop.hover { background: rgba(0,255,204,0.2); border-color: #00cc99; }
+.sell-form button { background: #000; color: #fff; border: 2px solid #fff; font-size:16px; padding:12px 20px; border-radius:10px; cursor:pointer; }
+.sell-form button:hover { transform: scale(1.05); background:#fff; color:#000; }
+
+.user-products { max-width:1200px; margin:40px auto; padding:0 15px; }
+.user-products h3 { margin-bottom:15px; text-align:center; font-size:22px; color:#fff; }
+table { width:100%; border-collapse: collapse; text-align:left; color:#fff; background: rgba(0,0,0,0.5); border-radius:10px; overflow:hidden; }
+table th, table td { padding:12px 10px; border-bottom:1px solid #fff; vertical-align: middle; }
+table th { background: rgba(255,255,255,0.1); }
+table tr:hover { background: rgba(255,255,255,0.1); }
+table img { width:60px; height:60px; object-fit:cover; border-radius:6px; }
+footer { margin-top:auto; background: rgba(0,0,0,0.5); text-align:center; padding:15px; color:#ccc; font-size:14px; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <h2>UpStyle Marketplace</h2>
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li><a href="buy.html">Buy</a></li>
+    <li><a href="sell.html">Sell</a></li>
+    <li><a href="trade.html">Trade</a></li>
+    <li>
+      <a href="cart.html">
+         🛒 Cart <span id="cartCount" style="background:#a5c6bf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span>
+      </a>
+    </li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="page-title">Sell Your Upcycled Products</div>
+
+<form class="sell-form" id="sellForm">
+  <input type="text" id="productName" placeholder="Product Name" required>
+  <input type="text" id="productPrice" placeholder="Price" required>
+  <textarea id="productDescription" placeholder="Product Description" required></textarea>
+  <div class="drag-drop" id="dragDrop">Drag & Drop Product Image Here or Click to Upload</div>
+  <input type="file" id="productImage" accept="image/*" style="display:none;" required>
+  <button type="submit">Add Product</button>
+</form>
+<!-- 
+<div class="user-products">
+  <h3>Your Submitted Products</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Price (₹)</th>
+        <th>Description</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="userProductsContainer"></tbody>
+  </table>
+</div> -->
+
+<footer>© 2025 UpStyle Marketplace | ♻️</footer>
+<script>
+const API_URL = "http://localhost:5000/api/sell"; // Backend sell API
+const user = JSON.parse(localStorage.getItem('user')) || {name:"Anonymous"};
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  localStorage.removeItem('user'); window.location.href='index.html';
+});
+
+// Drag & Drop
+const dragDrop = document.getElementById('dragDrop');
+const productImage = document.getElementById('productImage');
+dragDrop.addEventListener('click', () => productImage.click());
+dragDrop.addEventListener('dragover', e => { e.preventDefault(); dragDrop.classList.add('hover'); });
+dragDrop.addEventListener('dragleave', () => dragDrop.classList.remove('hover'));
+dragDrop.addEventListener('drop', e => {
+  e.preventDefault(); dragDrop.classList.remove('hover');
+  if(e.dataTransfer.files[0]) productImage.files = e.dataTransfer.files;
+  dragDrop.textContent = e.dataTransfer.files[0].name;
+});
+productImage.addEventListener('change', () => {
+  if(productImage.files[0]) dragDrop.textContent = productImage.files[0].name;
+});
+
+// Submit Product
+document.getElementById('sellForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const title = document.getElementById('productName').value.trim();
+  const description = document.getElementById('productDescription').value.trim();
+  const price = document.getElementById('productPrice').value.trim();
+  if(!title||!description||!price) return alert("All fields required");
+
+  const reader = new FileReader();
+  reader.onload = async function(event){
+    const imageBase64 = event.target.result;
+    const product = { title, description, price, image:imageBase64, sellerName:user.name, status:'Pending' };
+    try{
+      const res = await fetch(API_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(product)
+      });
+      if(!res.ok) throw new Error("Failed to submit product");
+      alert("Product submitted successfully!");
+      document.getElementById('sellForm').reset();
+      dragDrop.textContent="Drag & Drop Product Image Here or Click to Upload";
+      fetchUserProducts();
+    } catch(err){ console.error(err); alert(err.message); }
+  };
+  reader.readAsDataURL(productImage.files[0]);
+});
+
+// Fetch user's submitted products
+async function fetchUserProducts() {
+  const container = document.getElementById('userProductsContainer');
+  container.innerHTML = `<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>`;
+  try{
+    const res = await fetch(API_URL);
+    const products = await res.json();
+    const userProducts = products.filter(p => p.sellerName === user.name);
+    container.innerHTML = userProducts.length===0? 
+      `<tr><td colspan="5" style="text-align:center;">No products submitted yet.</td></tr>`:
+      userProducts.map(p=>`
+        <tr>
+          <td>${p.image?`<img src="${p.image}">`:'No Image'}</td>
+          <td>${p.title}</td>
+          <td>₹${p.price}</td>
+          <td>${p.description}</td>
+          <td>${p.status}</td>
+        </tr>
+      `).join('');
+  } catch(err){ console.error(err); }
+}
+
+fetchUserProducts();
+</script>
+</body>
+</html>

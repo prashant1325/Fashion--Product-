@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel - Manage Featured Products</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
+body{background:#111;color:#fff;min-height:100vh;}
+.navbar{width:100%;display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:rgba(0,0,0,0.85);position:fixed;top:0;left:0;z-index:1000;}
+.navbar h1{color:#00ffcc;}
+.navbar ul{list-style:none;display:flex;gap:20px;}
+.navbar ul li a,#logoutBtn{text-decoration:none;color:#fff;padding:8px 12px;border-radius:6px;transition:0.3s;}
+#logoutBtn{background:#e53935;} #logoutBtn:hover{background:#ff4444;}
+.main{padding:120px 40px;}
+.add-form{background:rgba(255,255,255,0.08);border-radius:15px;padding:20px;margin-bottom:30px;}
+.add-form input,.add-form textarea{width:100%;padding:10px;margin-bottom:12px;border:none;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;}
+.btn{padding:10px 20px;border:none;border-radius:8px;background:#00ffcc;color:#000;cursor:pointer;font-weight:600;transition:0.3s;}
+.btn:hover{background:#00e6b8;}
+#dropArea{margin-top:5px;padding:20px;border:2px dashed #00ffcc;border-radius:6px;text-align:center;color:#aaa;cursor:pointer;}
+table{width:100%;border-collapse:collapse;background:rgba(255,255,255,0.08);}
+th,td{padding:14px 16px;text-align:left;color:#ddd;border-bottom:1px solid rgba(255,255,255,0.1);}
+th{color:#00ffcc;}
+img{border-radius:6px;}
+.action-btn{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-weight:600;margin-right:6px;}
+.edit-btn{background:#007bff;color:#fff;}
+.delete-btn{background:#e53935;color:#fff;}
+.approve-btn{background:#00ffcc;color:#000;}
+.approve-btn.approved{background:#4caf50;color:#fff;}
+.reject-btn{background:#e53935;color:#fff;}
+.reject-btn.rejected{background:#9c27b0;color:#fff;}
+.action-btn:hover{opacity:0.9;}
+#toast{position: fixed; bottom: 30px; right: 30px; background: #333; color:#fff; padding: 15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5); opacity:0; transform: translateY(50px); transition:0.4s; z-index:10000;}
+#toast.show{opacity:1; transform: translateY(0);}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <h1>Admin</h1>
+  <ul>
+       <li><a href="index.html">Home</a></li>
+           <li><a href="manage-users.html">Manage Users</a></li>
+      <li><a href="product-listing.html">Product Listing</a></li>
+      <li><a href="buy-approval.html">Buy Approvals</a></li>
+      <li><a href="sell-approval.html">Sell Approvals</a></li>
+      <li><a href="trade-approval.html">Trade Approvals</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="main">
+  <h2>Manage Featured Products</h2>
+
+  <div class="add-form">
+    <h3>Add Product</h3>
+    <input type="text" id="productName" placeholder="Product Name">
+    <textarea id="productDesc" rows="3" placeholder="Product Description"></textarea>
+    <input type="number" id="productPrice" placeholder="Price">
+    <div id="dropArea">Drag & drop an image or click</div>
+    <input type="file" id="imageFile" accept="image/*" style="display:none">
+    <br>
+    <button class="btn" id="addBtn">Add Product</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Image</th><th>Name</th><th>Description</th><th>Price</th><th>Status</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="productTableBody"></tbody>
+  </table>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const BASE_URL = "http://localhost:5000/api/admin/featured";
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  window.location.href = "../index.html";
+});
+
+// Image Upload
+const dropArea = document.getElementById('dropArea');
+const imageFile = document.getElementById('imageFile');
+let uploadedImage = null;
+dropArea.addEventListener('click', () => imageFile.click());
+['dragenter','dragover','dragleave','drop'].forEach(ev => dropArea.addEventListener(ev, e=> e.preventDefault()));
+['dragenter','dragover'].forEach(ev=>dropArea.addEventListener(ev, ()=>dropArea.style.borderColor='#fff'));
+['dragleave','drop'].forEach(ev=>dropArea.addEventListener(ev, ()=>dropArea.style.borderColor='#00ffcc'));
+imageFile.addEventListener('change', e => { if(e.target.files.length) readFile(e.target.files[0]); });
+dropArea.addEventListener('drop', e => { if(e.dataTransfer.files.length) readFile(e.dataTransfer.files[0]); });
+
+function readFile(file){
+  if(!file.type.startsWith('image/')) return alert('Please select an image');
+  const reader = new FileReader();
+  reader.onload = ()=> uploadedImage = reader.result;
+  reader.readAsDataURL(file);
+}
+
+// Toast
+function showToast(msg){
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2500);
+}
+
+// Load Products
+async function loadProducts(){
+  try{
+    const res = await fetch(BASE_URL);
+    const products = await res.json();
+    const tbody = document.getElementById("productTableBody");
+    tbody.innerHTML = '';
+
+    products.forEach((p,i)=>{
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${i+1}</td>
+        <td><img src="${p.image}" width="60" height="40"></td>
+        <td>${p.title}</td>
+        <td>${p.description}</td>
+        <td>₹${p.price}</td>
+        <td>${p.status}</td>
+        <td>
+          <button class="action-btn approve-btn">Approve</button>
+          <button class="action-btn reject-btn">Reject</button>
+          <button class="action-btn edit-btn">Edit</button>
+          <button class="action-btn delete-btn">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+
+      const btnApprove = row.querySelector('.approve-btn');
+      const btnReject = row.querySelector('.reject-btn');
+      const btnEdit = row.querySelector('.edit-btn');
+      const btnDelete = row.querySelector('.delete-btn');
+
+      updateButtonColors(p, btnApprove, btnReject);
+
+      // Approve
+      btnApprove.addEventListener('click', async ()=>{
+        const ok = await updateStatus(p._id, 'Approved');
+        if(ok){
+          p.status = 'Approved';
+          row.cells[5].textContent = 'Approved';
+          updateButtonColors(p, btnApprove, btnReject);
+          showToast(`${p.title} approved`);
+        }
+      });
+
+      // Reject
+      btnReject.addEventListener('click', async ()=>{
+        const ok = await updateStatus(p._id, 'Rejected');
+        if(ok){
+          p.status = 'Rejected';
+          row.cells[5].textContent = 'Rejected';
+          updateButtonColors(p, btnApprove, btnReject);
+          showToast(`${p.title} rejected`);
+        }
+      });
+
+      // Edit
+      btnEdit.addEventListener('click', async ()=>{
+        const newTitle = prompt('New title:', p.title);
+        const newDesc = prompt('New description:', p.description);
+        const newPrice = prompt('New price:', p.price);
+        if(!newTitle || !newDesc || !newPrice) return;
+        const res = await fetch(`${BASE_URL}/${p._id}`, {
+          method:'PUT', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({title:newTitle, description:newDesc, price:newPrice})
+        });
+        if(res.ok){ showToast('Product updated'); loadProducts(); }
+      });
+
+      // Delete
+      btnDelete.addEventListener('click', async ()=>{
+        if(!confirm('Delete product?')) return;
+        const res = await fetch(`${BASE_URL}/${p._id}`, {method:'DELETE'});
+        if(res.ok){ showToast('Product deleted'); loadProducts(); }
+      });
+
+    });
+  }catch(err){ console.error(err); }
+}
+
+// Update button colors
+function updateButtonColors(product, btnApprove, btnReject){
+  btnApprove.classList.remove('approved');
+  btnReject.classList.remove('rejected');
+  if(product.status==='Approved') btnApprove.classList.add('approved');
+  else if(product.status==='Rejected') btnReject.classList.add('rejected');
+}
+
+// Update status API
+async function updateStatus(id,status){
+  try{
+    const res = await fetch(`${BASE_URL}/${id}/status`, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({status})
+    });
+    return res.ok;
+  }catch(err){ console.error(err); return false; }
+}
+
+// Add Product
+document.getElementById('addBtn').addEventListener('click', async ()=>{
+  const title = document.getElementById('productName').value.trim();
+  const description = document.getElementById('productDesc').value.trim();
+  const price = document.getElementById('productPrice').value.trim();
+  if(!title || !description || !price || !uploadedImage) return alert('Fill all fields');
+
+  const res = await fetch(BASE_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      title, description, price, image: uploadedImage, sellerName:'admin', status:'Pending'
+    })
+  });
+  if(res.ok){ showToast('Product added'); loadProducts(); }
+  else alert('Failed to add');
+});
+
+// Initial load
+loadProducts();
+</script>
+</body>
+</html>

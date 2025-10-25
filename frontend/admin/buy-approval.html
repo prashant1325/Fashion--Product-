@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Buy Approvals - Admin Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {margin:0;padding:0;box-sizing:border-box;font-family:"Poppins",sans-serif;}
+body {min-height:100vh;background: linear-gradient(135deg,#000,#0a0a0a);color:#fff;position:relative;}
+.navbar {width:100%;display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background: rgba(0,0,0,0.8);backdrop-filter:blur(6px);position:fixed;top:0;left:0;z-index:1000;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+.navbar h1 {font-size:24px;color:#00ffcc;}
+.navbar ul {list-style:none;display:flex;gap:20px;align-items:center;}
+.navbar ul li a {text-decoration:none;color:#fff;padding:8px 12px;border-radius:6px;transition:0.3s;font-weight:500;}
+#logoutBtn {background:#e53935;color:#fff;padding:8px 15px;border-radius:6px;transition:0.3s ease;}
+#logoutBtn:hover {background:#ff4444;transform:scale(1.05);}
+.main {margin-top:110px;padding:30px 40px;}
+.main h2 {color:#00ffcc;text-align:center;margin-bottom:25px;}
+table {width:100%;border-collapse:collapse;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.5);}
+th,td{padding:12px;text-align:center;color:#fff;border-bottom:1px solid #555;}
+th{background:rgba(0,255,204,0.2);}
+button{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;transition:0.3s;}
+.approve{background:#0f0;color:#000;}
+.reject{background:#f00;color:#fff;}
+.status-approved{color:#0f0;font-weight:600;}
+.status-rejected{color:#f00;font-weight:600;}
+.status-pending{color:#ff0;font-weight:600;}
+
+/* Toaster styles */
+#toaster {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  min-width: 250px;
+  padding: 12px 18px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateX(100%);
+  animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+}
+.toast-success { background: #0f0; color: #000; }
+.toast-error { background: #f00; }
+@keyframes slideIn { to { opacity:1; transform: translateX(0); } }
+@keyframes fadeOut { to { opacity:0; transform: translateX(100%); } }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <h1>Admin Panel</h1>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="manage-users.html">Manage Users</a></li>
+    <li><a href="product-listing.html">Product Listing</a></li>
+    <li><a href="buy-approval.html">Buy Approvals</a></li>
+    <li><a href="sell-approval.html">Sell Approvals</a></li>
+    <li><a href="trade-approval.html">Trade Approvals</a></li>
+    <li><button id="logoutBtn">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="main">
+  <h2>Pending Buy Requests</h2>
+  <table id="approvalTable">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="approvalBody"></tbody>
+  </table>
+</div>
+
+<!-- Toaster container -->
+<div id="toaster"></div>
+
+<script>
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', ()=> {
+  localStorage.clear();
+  window.location.href = 'index.html';
+});
+
+// Toaster function
+function showToast(message, type='success') {
+  const toaster = document.getElementById('toaster');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  toaster.appendChild(toast);
+  setTimeout(()=>{ toaster.removeChild(toast); }, 3000);
+}
+
+// Load pending buy requests
+async function loadBuyRequests() {
+  try{
+    const res = await fetch('http://localhost:5000/api/admin/buy-requests');
+    const requests = await res.json();
+    const tbody = document.getElementById('approvalBody');
+    tbody.innerHTML = '';
+
+    if (!requests.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color:#aaa;">No pending buy requests.</td></tr>`;
+      return;
+    }
+
+    requests.forEach(r=>{
+      const tr = document.createElement('tr');
+
+      const statusClass = r.status === 'Approved' ? 'status-approved' :
+                          r.status === 'Rejected' ? 'status-rejected' : 'status-pending';
+
+      tr.innerHTML = `
+        <td>${r.userId}</td>
+        <td>${r.name}</td>
+        <td>₹${r.price}</td>
+        <td class="${statusClass}">${r.status || 'Pending'}</td>
+        <td>
+          <button class="approve" onclick='updateStatus("${r._id}","Approved",this.parentElement.parentElement)'>Approve</button>
+          <button class="reject" onclick='updateStatus("${r._id}","Rejected",this.parentElement.parentElement)'>Reject</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch(err){ console.error(err); showToast('Failed to load requests', 'error'); }
+}
+
+// Update request status
+async function updateStatus(id,status,tr){
+  try{
+    const res = await fetch(`http://localhost:5000/api/admin/buy-requests/${id}`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({status})
+    });
+    const data = await res.json();
+    if(res.ok){
+      const statusTd = tr.querySelector('td:nth-child(4)');
+      statusTd.textContent = status;
+      statusTd.className = status === 'Approved' ? 'status-approved' :
+                           status === 'Rejected' ? 'status-rejected' : 'status-pending';
+
+      // Update user cart status
+      await fetch(`http://localhost:5000/api/cart/update-status`,{
+        method:'PATCH',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          userId: data.userId,
+          productId: data.productId,
+          status
+        })
+      });
+
+      showToast(`Buy request ${status.toLowerCase()} successfully`, 'success');
+    } else {
+      showToast(`Error: ${data.message || data.error}`, 'error');
+    }
+  } catch(err){
+    showToast(`Network error: ${err.message}`, 'error');
+  }
+}
+
+// Initial load
+loadBuyRequests();
+</script>
+
+</body>
+</html>

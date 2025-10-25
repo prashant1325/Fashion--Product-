@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - UpStyle Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+    body { min-height:100vh; background:#111; color:#fff; display:flex; flex-direction:column; }
+
+    /* Navbar */
+    .navbar {
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:15px 50px;
+      position:fixed;
+      top:0;
+      left:0;
+      background:black;
+      backdrop-filter: blur(8px);
+      z-index:1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .navbar h2 { color:#fff; font-size:26px; font-weight:700; }
+    .navbar ul { list-style:none; display:flex; align-items:center; gap:25px; }
+    .navbar ul li button {
+      padding:8px 16px;
+      border:none;
+      border-radius:6px;
+      background:#ff4d4d;
+      color:#fff;
+      cursor:pointer;
+      font-weight:500;
+      transition:0.3s;
+    }
+    .navbar ul li button:hover { background:#cc0000; }
+
+    /* Page Title */
+    .page-title { margin-top:100px; text-align:center; font-size:28px; font-weight:700; color:#00ffcc; text-shadow: 1px 1px 6px #000; }
+
+    /* Dashboard Container */
+    .dashboard {
+      display:flex;
+      flex-direction:column;
+      gap:40px;
+      max-width:1200px;
+      margin:20px auto;
+      padding:0 20px;
+    }
+
+    h3 { color:#00ffcc; margin-bottom:10px; }
+
+    /* Product Grid */
+    .product-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap:20px;
+    }
+    .product-card {
+      background: rgba(255,255,255,0.1);
+      border-radius:15px;
+      padding:15px;
+      text-align:center;
+      backdrop-filter:blur(6px);
+      transition:0.3s;
+      box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    }
+    .product-card img {
+      width:100%;
+      height:150px;
+      object-fit:cover;
+      border-radius:10px;
+      margin-bottom:10px;
+    }
+    .product-card h4 { color:#00ffcc; margin-bottom:5px; }
+    .product-card p { color:#eee; font-size:14px; }
+    .product-card .price { font-weight:bold; color:#fff; margin-bottom:10px; }
+    .product-card button {
+      padding:6px 12px;
+      margin:2px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:500;
+      transition:0.3s;
+    }
+    .edit-btn { background:#00ffcc; color:#000; }
+    .edit-btn:hover { background:#00cc99; }
+    .delete-btn { background:#ff4d4d; color:#fff; }
+    .delete-btn:hover { background:#cc0000; }
+    .approve-btn { background:#4dff4d; color:#000; }
+    .approve-btn:hover { background:#00cc00; }
+    .reject-btn { background:#ff6666; color:#fff; }
+    .reject-btn:hover { background:#cc0000; }
+
+    footer {
+      margin-top:auto;
+      background: rgba(0,0,0,0.5);
+      text-align:center;
+      padding:15px;
+      color:#ccc;
+      font-size:14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h2>Admin Dashboard</h2>
+    <ul>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
+
+  <div class="page-title">Welcome, Admin</div>
+
+  <div class="dashboard">
+    <!-- Featured Products -->
+    <div>
+      <h3>Featured Products (Buy)</h3>
+      <div id="featuredGrid" class="product-grid"></div>
+    </div>
+
+    <!-- User Sell Products -->
+    <div>
+      <h3>User Sell Products</h3>
+      <div id="sellGrid" class="product-grid"></div>
+    </div>
+
+    <!-- User Trade Products -->
+    <div>
+      <h3>User Trade Products</h3>
+      <div id="tradeGrid" class="product-grid"></div>
+    </div>
+  </div>
+
+  <footer>© 2025 UpStyle Marketplace | Admin Panel</footer>
+
+  <script>
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('admin');
+      window.location.href = 'index.html';
+    });
+
+    // Check admin
+    if(!localStorage.getItem('admin')){
+      alert("Access denied! Admins only.");
+      window.location.href = 'index.html';
+    }
+
+    // Load products
+    let featuredProducts = JSON.parse(localStorage.getItem('featuredProducts')) || [];
+    let sellProducts = JSON.parse(localStorage.getItem('sellProducts')) || [];
+    let tradeProducts = JSON.parse(localStorage.getItem('tradeProducts')) || [];
+
+    const featuredGrid = document.getElementById('featuredGrid');
+    const sellGrid = document.getElementById('sellGrid');
+    const tradeGrid = document.getElementById('tradeGrid');
+
+    function renderDashboard(){
+      // Featured
+      featuredGrid.innerHTML = featuredProducts.map((p,i)=>`
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.title}">
+          <h4>${p.title}</h4>
+          <p>${p.description}</p>
+          <div class="price">${p.price}</div>
+          <button class="edit-btn" onclick="editProduct(${i})">Edit</button>
+          <button class="delete-btn" onclick="deleteFeatured(${i})">Delete</button>
+        </div>
+      `).join('');
+
+      // Sell
+      sellGrid.innerHTML = sellProducts.map((p,i)=>`
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.title}">
+          <h4>${p.title}</h4>
+          <p>${p.description}</p>
+          <div class="price">${p.price}</div>
+          <button class="approve-btn" onclick="approveSell(${i})">Approve</button>
+          <button class="reject-btn" onclick="rejectSell(${i})">Reject</button>
+        </div>
+      `).join('');
+
+      // Trade
+      tradeGrid.innerHTML = tradeProducts.map((p,i)=>`
+        <div class="product-card">
+          <img src="${p.image}" alt="${p.title}">
+          <h4>${p.title}</h4>
+          <p>${p.description}</p>
+          <div class="price">${p.price}</div>
+          <button class="approve-btn" onclick="approveTrade(${i})">Approve</button>
+          <button class="reject-btn" onclick="rejectTrade(${i})">Reject</button>
+        </div>
+      `).join('');
+    }
+
+    renderDashboard();
+
+    // Admin Actions
+    function editProduct(index){
+      let p = featuredProducts[index];
+      let title = prompt("Edit Title:", p.title);
+      let desc = prompt("Edit Description:", p.description);
+      let price = prompt("Edit Price:", p.price);
+      if(title && desc && price){
+        featuredProducts[index] = { ...p, title, description: desc, price };
+        localStorage.setItem('featuredProducts', JSON.stringify(featuredProducts));
+        renderDashboard();
+      }
+    }
+
+    function deleteFeatured(index){
+      if(confirm("Delete this featured product?")){
+        featuredProducts.splice(index,1);
+        localStorage.setItem('featuredProducts', JSON.stringify(featuredProducts));
+        renderDashboard();
+      }
+    }
+
+    function approveSell(index){
+      let product = sellProducts.splice(index,1)[0];
+      featuredProducts.push(product);
+      localStorage.setItem('sellProducts', JSON.stringify(sellProducts));
+      localStorage.setItem('featuredProducts', JSON.stringify(featuredProducts));
+      renderDashboard();
+    }
+
+    function rejectSell(index){
+      sellProducts.splice(index,1);
+      localStorage.setItem('sellProducts', JSON.stringify(sellProducts));
+      renderDashboard();
+    }
+
+    function approveTrade(index){
+      let product = tradeProducts.splice(index,1)[0];
+      featuredProducts.push(product);
+      localStorage.setItem('tradeProducts', JSON.stringify(tradeProducts));
+      localStorage.setItem('featuredProducts', JSON.stringify(featuredProducts));
+      renderDashboard();
+    }
+
+    function rejectTrade(index){
+      tradeProducts.splice(index,1);
+      localStorage.setItem('tradeProducts', JSON.stringify(tradeProducts));
+      renderDashboard();
+    }
+  </script>
+
+</body>
+</html>
