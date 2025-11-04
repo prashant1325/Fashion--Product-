@@ -5,39 +5,201 @@
 <title>Cart - UpStyle Marketplace</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
-body { min-height:100vh; background: linear-gradient(to right, black, #868585); color:#fff; display:flex; flex-direction:column; }
+ * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
 
-.navbar { width:100%; display:flex; justify-content:space-between; align-items:center; padding:15px 50px; position:fixed; top:0; left:0; background:rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index:1000; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-.navbar h2 { color:#00ffcc; font-size:26px; font-weight:700; }
-.navbar ul { list-style:none; display:flex; align-items:center; gap:25px; }
-.navbar ul li a { text-decoration:none; color:#fff; font-weight:500; font-size:16px; padding:6px 12px; border-radius:5px; transition:0.3s; }
-.navbar ul li button { padding:8px 16px; border:none; border-radius:6px; background:#ff4d4d; color:#fff; cursor:pointer; font-weight:500; transition:0.3s; }
-.navbar ul li button:hover { background:#cc0000; }
+    body {
+      min-height: 100vh;
+  background: linear-gradient(to right, black, #868585);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+    }
 
-.page-title { margin-top:140px; text-align:center; font-size:30px; font-weight:700; color:#00ffcc; }
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: black;
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
 
-.cart-container { padding:20px 60px; }
-table { width:100%; border-collapse: collapse; }
-th, td { padding:12px; text-align:center; border-bottom:1px solid #555; }
-th { background: rgba(0,255,204,0.2); color:#00ffcc; font-weight:700; }
-td img { width:80px; height:80px; object-fit:cover; border-radius:8px; }
-td button { padding:6px 12px; border:none; border-radius:6px; background:#ff4d4d; color:#fff; cursor:pointer; transition:0.3s; }
-td button:hover { background:#cc0000; }
-.approved { color:#0f0; font-weight:600; }
-.not-approved { color:#f00; font-weight:600; }
-.pending { color:#ff0; font-weight:600; }
-tfoot td { font-weight:bold; color:#00ffcc; text-align:right; }
+    .navbar h2 {
+      color: #00ffcc;
+      font-size: 26px;
+      font-weight: 700;
+    }
 
-footer { margin-top:auto; background: rgba(0,0,0,0.7); text-align:center; padding:15px; color:#ccc; font-size:14px; }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
 
-/* Hidden receipt container for PDF generation */
-#hiddenReceipt { position:absolute; left:-9999px; top:-9999px; width:210mm; background:#fff; color:#000; padding:20px; font-size:12px; }
-#hiddenReceipt h2 { text-align:center; margin-bottom:10px; }
-#hiddenReceipt table { width:100%; border-collapse: collapse; margin-top:10px; }
-#hiddenReceipt th, #hiddenReceipt td { border:1px solid #000; padding:5px; text-align:center; }
-#hiddenReceipt img { width:50px; height:50px; object-fit:cover; }
+    .navbar ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .navbar ul li button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #ff4d4d;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .navbar ul li button:hover {
+      background: #cc0000;
+    }
+
+/* Page Title */
+.page-title {
+  margin-top: 140px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #00ffcc;
+}
+
+/* Cart Container */
+.cart-container {
+  padding: 20px 60px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #555;
+}
+th {
+  background: rgba(0, 255, 204, 0.2);
+  color: #00ffcc;
+  font-weight: 700;
+}
+td img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+td button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #ff4d4d;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+td button:hover {
+  background: #cc0000;
+}
+.approved {
+  color: #0f0;
+  font-weight: 600;
+}
+.not-approved {
+  color: #f00;
+  font-weight: 600;
+}
+.pending {
+  color: #ff0;
+  font-weight: 600;
+}
+tfoot td {
+  font-weight: bold;
+  color: #00ffcc;
+  text-align: right;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  background: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  padding: 15px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* Hidden receipt for PDF */
+#hiddenReceipt {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 210mm;
+  background: #fff;
+  color: #000;
+  padding: 20px;
+  font-size: 12px;
+}
+#hiddenReceipt h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+#hiddenReceipt table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+#hiddenReceipt th, #hiddenReceipt td {
+  border: 1px solid #000;
+  padding: 5px;
+  text-align: center;
+}
+#hiddenReceipt img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
+  }
+  .navbar ul {
+    gap: 15px;
+  }
+  .cart-container {
+    padding: 20px;
+  }
+  th, td {
+    padding: 10px;
+  }
+  .page-title {
+    font-size: 24px;
+    margin-top: 100px;
+  }
+}
 </style>
+
 </head>
 <body>
 

@@ -4,49 +4,189 @@
   <meta charset="UTF-8">
   <title>Manage Users - Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
-    body { min-height: 100vh; background: linear-gradient(135deg, #000000, #0a0a0a); color: #fff; }
+ <style>
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
 
-    /* Navbar */
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #111111);
+    color: #fff;
+  }
+
+  /* Navbar */
+  .navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 255, 204, 0.15);
+  }
+
+  .navbar h1 {
+    font-size: 26px;
+    color: #00ffcc;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+    font-weight: 500;
+  }
+
+ 
+
+  /* Logout button */
+  #logoutBtn {
+    background: #e53935;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: 0.3s ease;
+  }
+
+  #logoutBtn:hover {
+    background: #ff4444;
+    transform: scale(1.1);
+  }
+
+
+
+  /* Main Section */
+  .main {
+    margin-top: 110px;
+    padding: 30px 40px;
+  }
+
+  .main h2 {
+    color: #00ffcc;
+    margin-bottom: 25px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  thead {
+    background: rgba(0, 255, 204, 0.1);
+  }
+
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    color: #ddd;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  th {
+    color: #00ffcc;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+  }
+
+  /* Action buttons */
+  .btn-edit, .btn-delete {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s ease;
+  }
+
+  .btn-edit {
+    background: #00ffcc;
+    color: #000;
+  }
+
+  .btn-edit:hover {
+    background: #fff;
+    transform: translateY(-2px);
+  }
+
+  .btn-delete {
+    background: #e53935;
+    color: #fff;
+  }
+
+  .btn-delete:hover {
+    background: #ff4444;
+    transform: scale(1.1);
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 100px;
+    text-align: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #aaa;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    table {
+      font-size: 12px;
+    }
+
     .navbar {
-      width: 100%; display: flex; justify-content: space-between; align-items: center;
-      padding: 15px 40px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(6px);
-      position: fixed; top: 0; left: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 20px;
     }
-    .navbar h1 { font-size: 24px; color: #00ffcc; letter-spacing: 1px; }
-    .navbar ul { list-style: none; display: flex; gap: 20px; align-items: center; }
-    .navbar ul li a { text-decoration: none; color: #fff; padding: 8px 12px; border-radius: 6px; transition: 0.3s; font-weight: 500; }
-    #logoutBtn { background: #e53935; color: #fff; padding: 8px 15px; border-radius: 6px; transition: 0.3s ease; }
-    #logoutBtn:hover { background: #ff4444; transform: scale(1.05); }
 
-    /* Main */
-    .main { margin-top: 110px; padding: 30px 40px; }
-    .main h2 { color: #00ffcc; margin-bottom: 25px; text-align: center; }
-
-    /* Table */
-    table { width: 100%; border-collapse: collapse; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-    thead { background: rgba(0, 255, 204, 0.1); }
-    th, td { padding: 14px 16px; text-align: left; color: #ddd; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    th { color: #00ffcc; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px; }
-    tr:hover { background: rgba(255, 255, 255, 0.12); transition: 0.3s; }
-
-    /* Action buttons */
-    .btn-edit, .btn-delete { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.3s ease; }
-    .btn-edit { background: #00ffcc; color: #000; }
-    .btn-edit:hover { background: #fff; }
-    .btn-delete { background: #e53935; color: #fff; }
-    .btn-delete:hover { background: #ff4444; transform: scale(1.05); }
-
-    footer { margin-top: 50px; text-align: center; padding: 20px; background: rgba(0, 0, 0, 0.75); color: #aaa; font-size: 14px; letter-spacing: 0.5px; }
-
-    @media (max-width: 768px) {
-      table { font-size: 13px; }
-      .navbar { flex-direction: column; align-items: flex-start; }
-      .navbar ul { flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-      .main { padding: 20px; }
+    .navbar ul {
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
     }
-  </style>
+
+    .main {
+      padding: 20px;
+    }
+  }
+</style>
+
 </head>
 <body>
 
@@ -57,9 +197,9 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="manage-users.html">Manage Users</a></li>
       <li><a href="product-listing.html">Product Listing</a></li>
-      <li><a href="buy-approval.html">Buy Approvals</a></li>
+      
       <li><a href="sell-approval.html">Sell Approvals</a></li>
-      <li><a href="trade-approval.html">Trade Approvals</a></li>
+      <li><a href="trade-approval.html">Trade Approvals</a></li><li><a href="buy-approval.html">Buy Approvals</a></li>
       <li><a href="#" id="logoutBtn">Logout</a></li>
     </ul>
   </nav>
@@ -83,8 +223,8 @@
       </tbody>
     </table>
   </div>
-
-  <footer>© 2025 Upstyle Marketplace | Manage Users</footer>
+<!-- 
+  <footer>© 2025 Upstyle Marketplace | Manage Users</footer> -->
 
   <script>
     const userTableBody = document.getElementById('userTableBody');

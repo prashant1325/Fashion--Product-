@@ -5,46 +5,332 @@
 <title>Admin Panel - Manage Featured Products</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins,sans-serif;}
-body{background:#111;color:#fff;min-height:100vh;}
-.navbar{width:100%;display:flex;justify-content:space-between;align-items:center;padding:15px 40px;background:rgba(0,0,0,0.85);position:fixed;top:0;left:0;z-index:1000;}
-.navbar h1{color:#00ffcc;}
-.navbar ul{list-style:none;display:flex;gap:20px;}
-.navbar ul li a,#logoutBtn{text-decoration:none;color:#fff;padding:8px 12px;border-radius:6px;transition:0.3s;}
-#logoutBtn{background:#e53935;} #logoutBtn:hover{background:#ff4444;}
-.main{padding:120px 40px;}
-.add-form{background:rgba(255,255,255,0.08);border-radius:15px;padding:20px;margin-bottom:30px;}
-.add-form input,.add-form textarea{width:100%;padding:10px;margin-bottom:12px;border:none;border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;}
-.btn{padding:10px 20px;border:none;border-radius:8px;background:#00ffcc;color:#000;cursor:pointer;font-weight:600;transition:0.3s;}
-.btn:hover{background:#00e6b8;}
-#dropArea{margin-top:5px;padding:20px;border:2px dashed #00ffcc;border-radius:6px;text-align:center;color:#aaa;cursor:pointer;}
-table{width:100%;border-collapse:collapse;background:rgba(255,255,255,0.08);}
-th,td{padding:14px 16px;text-align:left;color:#ddd;border-bottom:1px solid rgba(255,255,255,0.1);}
-th{color:#00ffcc;}
-img{border-radius:6px;}
-.action-btn{padding:6px 10px;border:none;border-radius:6px;cursor:pointer;font-weight:600;margin-right:6px;}
-.edit-btn{background:#007bff;color:#fff;}
-.delete-btn{background:#e53935;color:#fff;}
-.approve-btn{background:#00ffcc;color:#000;}
-.approve-btn.approved{background:#4caf50;color:#fff;}
-.reject-btn{background:#e53935;color:#fff;}
-.reject-btn.rejected{background:#9c27b0;color:#fff;}
-.action-btn:hover{opacity:0.9;}
-#toast{position: fixed; bottom: 30px; right: 30px; background: #333; color:#fff; padding: 15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5); opacity:0; transform: translateY(50px); transition:0.4s; z-index:10000;}
-#toast.show{opacity:1; transform: translateY(0);}
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #111111);
+    color: #fff;
+  }
+
+  /* Navbar */
+  .navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 255, 204, 0.15);
+  }
+
+  .navbar h1 {
+    font-size: 26px;
+    color: #00ffcc;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+    font-weight: 500;
+  }
+
+ 
+
+  /* Logout button */
+  #logoutBtn {
+    background: #e53935;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: 0.3s ease;
+  }
+
+  #logoutBtn:hover {
+    background: #ff4444;
+    transform: scale(1.1);
+  }
+
+
+  /* Main Content */
+  .main {
+    padding: 140px 40px 30px;
+    animation: fadeIn 1s ease;
+  }
+
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(15px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 18px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* Form Card */
+  .add-form {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 28px 22px;
+    box-shadow: 0 8px 22px rgba(0, 255, 204, 0.15);
+    margin-bottom: 32px;
+    transition: 0.3s ease;
+  }
+
+  .add-form:hover {
+    box-shadow: 0 10px 30px rgba(0, 255, 204, 0.3);
+    transform: translateY(-5px);
+  }
+
+  .add-form h3 {
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    color: #00e6b8;
+  }
+
+  .add-form input,
+  .add-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #e8e8e8;
+    font-size: 0.95rem;
+    transition: 0.3s;
+  }
+
+  .add-form input:focus,
+  .add-form textarea:focus {
+    outline: 2px solid #00ffcc;
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 0 10px #00ffcc;
+  }
+
+  /* Drag and Drop */
+  #dropArea {
+    margin-top: 4px;
+    padding: 22px;
+    border: 2px dashed #00ffcc;
+    border-radius: 10px;
+    text-align: center;
+    color: #ccc;
+    cursor: pointer;
+    background: rgba(0, 255, 204, 0.05);
+    transition: 0.35s ease, border-color 0.25s ease;
+  }
+
+  #dropArea:hover {
+    background: rgba(0, 255, 204, 0.12);
+    border-color: #fff;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 26px;
+    border: none;
+    border-radius: 8px;
+    background: #00ffcc;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.35s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .btn:hover {
+    background: #00e6b8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 255, 204, 0.4);
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: fadeUp 1s ease;
+  }
+
+  @keyframes fadeUp {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+
+  th,
+  td {
+    padding: 14px 18px;
+    text-align: left;
+    color: #ddd;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  th {
+    color: #00ffcc;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: rgba(0, 255, 204, 0.05);
+  }
+
+  tr:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  img {
+    border-radius: 8px;
+  }
+
+  /* Action Buttons */
+  .action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 6px;
+    font-size: 0.85rem;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .approve-btn {
+    background: #00ffcc;
+    color: #000;
+  }
+
+  .approve-btn.approved {
+    background: #4caf50;
+    color: #fff;
+  }
+
+  .reject-btn {
+    background: #e53935;
+    color: #fff;
+  }
+
+  .reject-btn.rejected {
+    background: #9c27b0;
+    color: #fff;
+  }
+
+  .edit-btn {
+    background: #007bff;
+    color: #fff;
+  }
+
+  .delete-btn {
+    background: #e53935;
+    color: #fff;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Toast Notification */
+  #toast {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background: rgba(0, 0, 0, 0.88);
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.3);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 0.4s ease;
+    z-index: 10000;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  #toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 14px 22px;
+    }
+
+    .navbar ul {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .main {
+      padding: 120px 20px 40px;
+    }
+
+    table {
+      font-size: 0.85rem;
+    }
+
+    .btn,
+    .action-btn {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    #dropArea {
+      font-size: 0.9rem;
+      padding: 16px;
+    }
+  }
 </style>
+
+
 </head>
 <body>
 
 <nav class="navbar">
-  <h1>Admin</h1>
+  <h1>Product-Listing</h1>
   <ul>
        <li><a href="index.html">Home</a></li>
-           <li><a href="manage-users.html">Manage Users</a></li>
+      <li><a href="manage-users.html">Manage Users</a></li>
       <li><a href="product-listing.html">Product Listing</a></li>
-      <li><a href="buy-approval.html">Buy Approvals</a></li>
       <li><a href="sell-approval.html">Sell Approvals</a></li>
       <li><a href="trade-approval.html">Trade Approvals</a></li>
+       <li><a href="buy-approval.html">Buy Approvals</a></li>
       <li><button id="logoutBtn">Logout</button></li>
   </ul>
 </nav>

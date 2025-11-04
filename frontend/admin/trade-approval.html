@@ -5,75 +5,250 @@
 <title>Trade Approvals - Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
-body { min-height:100vh; background: linear-gradient(135deg, #000, #0a0a0a); color: #fff; }
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
 
-.navbar {
-  width: 100%; display: flex; justify-content: space-between; align-items: center;
-  padding: 15px 40px; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-  position: fixed; top:0; left:0; z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.5);
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #000000, #111111);
+    color: #fff;
+  }
+
+  /* Navbar */
+  .navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 255, 204, 0.15);
+  }
+
+  .navbar h1 {
+    font-size: 26px;
+    color: #00ffcc;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: 0.3s ease;
+    font-weight: 500;
+  }
+
+ 
+
+  /* Logout button */
+  #logoutBtn {
+    background: #e53935;
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: 0.3s ease;
+  }
+
+  #logoutBtn:hover {
+    background: #ff4444;
+    transform: scale(1.1);
+  }
+
+
+/* Main Content */
+.main {
+  margin-top: 110px;
+  padding: 30px 40px;
 }
-.navbar h1 { font-size:24px; color:#00ffcc; }
-.navbar ul { list-style:none; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
-.navbar ul li a { text-decoration:none; color:#fff; padding:8px 12px; border-radius:6px; transition:0.3s; font-weight:500; }
-.navbar ul li a:hover { background:#00ffcc; color:#000; }
-#logoutBtn { background:#e53935; color:#fff; padding:8px 15px; border-radius:6px; transition:0.3s ease; }
-#logoutBtn:hover { background:#ff4444; transform:scale(1.05); }
 
-.main { margin-top:110px; padding:30px 40px; }
-.main h2 { color:#00ffcc; text-align:center; margin-bottom:25px; }
-
-table { width:100%; border-collapse:collapse; background: rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
-thead { background: rgba(0,255,204,0.1); }
-th, td { padding:14px 16px; text-align:left; color:#ddd; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:middle; }
-th { color:#00ffcc; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
-tr:hover { background: rgba(255,255,255,0.12); transition:0.3s; }
-
-.btn-approve, .btn-reject, .btn-delete {
-  padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-weight:500; margin-right:5px; transition:0.3s ease;
+.main h2 {
+  color: #00ffcc;
+  text-align: center;
+  margin-bottom: 25px;
 }
-.btn-approve { background:#00ffcc; color:#000; }
-.btn-approve.approved { background:#4caf50; color:#fff; }
-.btn-approve:hover { background:#fff; transform:scale(1.05); }
 
-.btn-reject { background:#e53935; color:#fff; }
-.btn-reject.rejected { background:#9c27b0; color:#fff; }
-.btn-reject:hover { background:#ff4444; transform:scale(1.05); }
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
 
-.btn-delete { background:#ff9900; color:#000; }
-.btn-delete:hover { background:#ffaa33; transform:scale(1.05); }
+thead {
+  background: rgba(0, 255, 204, 0.1);
+}
 
-.product-img { width:60px; height:60px; border-radius:8px; object-fit:cover; border:1px solid #00ffcc; }
+th, td {
+  padding: 14px 16px;
+  text-align: left;
+  color: #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  vertical-align: middle;
+}
 
+th {
+  color: #00ffcc;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transition: 0.3s;
+}
+
+/* Buttons */
+.btn-approve,
+.btn-reject,
+.btn-delete {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 5px;
+  transition: 0.3s ease;
+}
+
+.btn-approve {
+  background: #00ffcc;
+  color: #000;
+}
+
+.btn-approve.approved {
+  background: #4caf50;
+  color: #fff;
+}
+
+.btn-reject {
+  background: #e53935;
+  color: #fff;
+}
+
+.btn-reject.rejected {
+  background: #9c27b0;
+  color: #fff;
+}
+
+.btn-delete {
+  background: #ff9900;
+  color: #000;
+}
+
+.btn-approve:hover,
+.btn-reject:hover,
+.btn-delete:hover {
+  transform: scale(1.05);
+}
+
+.btn-delete:hover {
+  background: #ffaa33;
+}
+
+/* Product Images */
+.product-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #00ffcc;
+}
+
+/* Toast Notification */
 #toast {
-  position: fixed; bottom: 30px; right: 30px; background: #333; color:#fff;
-  padding: 15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5);
-  opacity:0; transform: translateY(50px); transition: 0.4s; z-index:10000;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #333;
+  color: #fff;
+  padding: 15px 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(50px);
+  transition: 0.4s;
+  z-index: 10000;
 }
-#toast.show { opacity:1; transform: translateY(0); }
 
-footer { margin-top:50px; text-align:center; padding:20px; background: rgba(0,0,0,0.75); color:#aaa; font-size:14px; }
-
-@media(max-width:768px){
-  table { font-size:13px; }
-  .navbar { flex-direction:column; align-items:flex-start; }
-  .navbar ul { gap:10px; margin-top:10px; }
-  .main { padding:20px; }
-  .btn-approve, .btn-reject, .btn-delete { margin-bottom:5px; }
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
+
+/* Footer */
+footer {
+  margin-top: 50px;
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    font-size: 13px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar ul {
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  .btn-approve,
+  .btn-reject,
+  .btn-delete {
+    margin-bottom: 5px;
+  }
+}
+
 </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <h1>Admin Panel</h1>
+  <h1>trade Approval</h1>
   <ul>
-    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="index.html">Home</a></li>
     <li><a href="manage-users.html">Manage Users</a></li>
     <li><a href="product-listing.html">Product Listing</a></li>
-    <li><a href="buy-approval.html">Buy Approvals</a></li>
+    
     <li><a href="sell-approval.html">Sell Approvals</a></li>
-    <li><a href="trade-approval.html">Trade Approvals</a></li>
+    <li><a href="trade-approval.html">Trade Approvals</a>
+    </li><li><a href="buy-approval.html">Buy Approvals</a></li>
     <li><a href="#" id="logoutBtn">Logout</a></li>
   </ul>
 </nav>
@@ -96,7 +271,7 @@ footer { margin-top:50px; text-align:center; padding:20px; background: rgba(0,0,
 </div>
 
 <div id="toast"></div>
-<footer>© 2025 UpStyle Marketplace | Admin Panel</footer>
+
 
 <script>
 const API_URL = 'http://localhost:5000/api/trades';
