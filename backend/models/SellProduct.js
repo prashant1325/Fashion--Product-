@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 
 const SellProductSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: String,
   description: String,
-  price: Number,
+  price: String,
   image: String,
   sellerName: String,
   status: { type: String, default: 'Pending' },
-}, { timestamps: true });
+  createdAt: { type: Date, default: Date.now }
+});
 
-module.exports = mongoose.model('SellProduct', SellProductSchema);
+module.exports = mongoose.model('Sell', SellProductSchema);

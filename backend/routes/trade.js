@@ -15,13 +15,13 @@ router.get('/', async (req, res) => {
 // Create new trade
 router.post('/', async (req, res) => {
   try {
-    const { title, condition, description, image, status } = req.body;
+    const { title, condition, description, image, status, sellerName } = req.body;
 
-    if (!title || !condition || !description || !image) {
+    if (!title || !condition || !description || !image || !sellerName) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const trade = new Trade({ title, condition, description, image, status });
+    const trade = new Trade({ title, condition, description, image, status, sellerName });
     await trade.save();
     res.status(201).json(trade);
   } catch (err) {

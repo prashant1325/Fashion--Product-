@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Submitted Products </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* Global Reset & Font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Body */
+body {
+  min-height: 100vh;
+  background: url("img/user.jpg") no-repeat center center/cover;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+}
+
+/* Navbar */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar h2 {
+  color: #00ffcc;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.navbar ul li button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ff4d4d;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.navbar ul li button:hover {
+  background: #cc0000;
+}
+
+/* Headings */
+h1 {
+  font-size: 28px;
+  margin-top: 20px;
+  color: black;
+  text-shadow: 5px 5px 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Tables */
+table {
+  width: 90%;
+  max-width: 900px;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 30px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  color: white;
+}
+
+thead {
+  background: #101010;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 15px;
+}
+
+th {
+  font-weight: 600;
+  border-bottom: 2px solid #00ffcc;
+  
+}
+
+
+
+/* Product Image */
+.product-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+/* Status Labels */
+.status {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  color: orange;
+}
+
+.status.approved {
+  color: #00ff00;
+}
+
+.status.rejected {
+  color: red;
+}
+
+/* Delete Button */
+.delete-btn {
+  padding: 6px 12px;
+  background: #ff4d4d;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  background: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  padding: 18px;
+  color: #ccc;
+  font-size: 14px;
+  width: 100%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+}
+</style>
+
+
+</head>
+<body>
+
+<nav class="navbar">
+    <h2>UpStyle Marketplace</h2>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="buy.html">Buy</a></li>
+      <li><a href="sell.html">Sell</a></li>
+      <li><a href="trade.html">Trade</a></li>
+      <li><a href="user.html"> User Products</a></li>
+      <li>
+        <a href="cart.html">
+          🛒 Cart <span id="cartCount" style="background:#48ccaf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span>
+        </a>
+      </li>
+      <li><button id="logoutBtn">Logout</button></li>
+    </ul>
+  </nav>
+
+<h1>Your Submitted Sell Products</h1>
+<table id="sellTable">
+<thead>
+<tr>
+<th>Image</th>
+<th>Product Name</th>
+<th>Price (₹)</th>
+<th>Description</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="sellContainer">
+<tr><td colspan="6" style="text-align:center;">Loading products...</td></tr>
+</tbody>
+</table>
+
+<h1 style="margin-top:60px;">Your Trade Requests</h1>
+<table id="tradeTable">
+<thead>
+<tr>
+<th>Image</th>
+<th>Product Name</th>
+<th>Condition</th>
+<th>Description</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="tradeContainer">
+<tr><td colspan="6" style="text-align:center;">Loading trades...</td></tr>
+</tbody>
+</table>
+
+<footer>© 2025 UpStyle Marketplace | Designed with ♻️ Sustainable Innovation</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const SELL_API = "http://localhost:5000/api/sell";
+  const TRADE_API = "http://localhost:5000/api/trades";
+  const BASE_URL = "http://localhost:5000";
+
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  if(!currentUser){
+    alert("Please login first!");
+    window.location.href = "index.html";
+    return;
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem("user");
+    window.location.href = "index.html";
+  });
+
+  function getImageSrc(image){
+    if(!image) return "img/placeholder.png";
+    if(image.startsWith("data:image")) return image;
+    if(image.startsWith("uploads")) return `${BASE_URL}/${image}`;
+    if(image.startsWith("http")) return image;
+    return "img/placeholder.png";
+  }
+
+  async function fetchSellProducts(){
+    const container = document.getElementById('sellContainer');
+    try {
+      const res = await fetch(SELL_API);
+      const products = await res.json();
+      const userProducts = products.filter(p => p.username === currentUser.name || p.sellerName === currentUser.name);
+
+      if(userProducts.length === 0){
+        container.innerHTML = `<tr><td colspan="6" style="text-align:center;">No products submitted yet.</td></tr>`;
+        return;
+      }
+
+      container.innerHTML = userProducts.map(p => `
+        <tr>
+          <td><img src="${getImageSrc(p.image)}" class="product-img"></td>
+          <td>${p.title}</td>
+          <td>₹${p.price || 0}</td>
+          <td>${p.description}</td>
+          <td class="status ${p.status?.toLowerCase() || 'pending'}">${p.status || 'Pending'}</td>
+          <td><button class="delete-btn" onclick="deleteSell('${p._id}')">Delete</button></td>
+        </tr>
+      `).join('');
+
+    } catch(err){
+      console.error(err);
+      container.innerHTML = `<tr><td colspan="6" style="color:red;">Error loading products.</td></tr>`;
+    }
+  }
+
+  async function fetchTradeRequests(){
+    const container = document.getElementById('tradeContainer');
+    try {
+      const res = await fetch(TRADE_API);
+      const trades = await res.json();
+      const userTrades = trades.filter(t => t.username === currentUser.name || t.sellerName === currentUser.name);
+
+      if(userTrades.length === 0){
+        container.innerHTML = `<tr><td colspan="6" style="text-align:center;">No trade requests yet.</td></tr>`;
+        return;
+      }
+
+      container.innerHTML = userTrades.map(t => `
+        <tr>
+          <td><img src="${getImageSrc(t.image)}" class="product-img"></td>
+          <td>${t.title}</td>
+          <td>${t.condition}</td>
+          <td>${t.description}</td>
+          <td class="status ${t.status?.toLowerCase() || 'pending'}">${t.status || 'Pending'}</td>
+          <td><button class="delete-btn" onclick="deleteTrade('${t._id}')">Delete</button></td>
+        </tr>
+      `).join('');
+
+    } catch(err){
+      console.error(err);
+      container.innerHTML = `<tr><td colspan="6" style="color:red;">Error loading trades.</td></tr>`;
+    }
+  }
+
+  // Delete functions
+  window.deleteSell = async (id) => {
+    if(!confirm("Are you sure you want to delete this product?")) return;
+    try {
+      await fetch(`${SELL_API}/${id}`, { method: "DELETE" });
+      fetchSellProducts();
+    } catch(err) {
+      console.error(err);
+      alert("Failed to delete product.");
+    }
+  }
+
+  window.deleteTrade = async (id) => {
+    if(!confirm("Are you sure you want to delete this trade request?")) return;
+    try {
+      await fetch(`${TRADE_API}/${id}`, { method: "DELETE" });
+      fetchTradeRequests();
+    } catch(err) {
+      console.error(err);
+      alert("Failed to delete trade request.");
+    }
+  }
+
+  fetchSellProducts();
+  fetchTradeRequests();
+});
+</script>
+
+</body>
+</html>

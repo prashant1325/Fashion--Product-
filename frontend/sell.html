@@ -30,10 +30,11 @@
       position: fixed;
       top: 0;
       left: 0;
-      background: black;
-      backdrop-filter: blur(8px);
-      z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+       background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+     
     }
 
     .navbar h2 {
@@ -75,17 +76,17 @@
     }
 
 
-/* Page Title */
+
 .page-title {
   margin-top: 160px;
   text-align: center;
   font-size: 32px;
   font-weight: 700;
-  color: #fff;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+ text-shadow: 6px 5px 20px rgb(0, 0, 0);
+  color: black;
 }
 
-/* Sell Form Styles */
+
 .sell-form {
   width: 100%;
   max-width: 600px;
@@ -94,10 +95,10 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(8px);
   border-radius: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 2px solid black;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -105,17 +106,17 @@
 .sell-form textarea {
   padding: 12px 15px;
   border-radius: 10px;
-  border: 2px solid transparent;
+    border: 2px solid black;
   font-size: 16px;
   width: 100%;
   background: rgba(255, 255, 255, 0.95);
-  color: #222;
+  color: black;
   transition: border 0.3s, background 0.3s;
 }
 
 .sell-form input:focus,
 .sell-form textarea:focus {
-  border-color: #00ffcc;
+ 
   background: #fff;
 }
 
@@ -124,14 +125,14 @@
   resize: vertical;
 }
 
-/* Drag & Drop Upload */
+
 .drag-drop {
-  border: 3px dashed #999;
+  border: 3px dashed black;
   border-radius: 12px;
   padding: 25px;
   text-align: center;
   font-size: 16px;
-  color: #555;
+  color: black;
   cursor: pointer;
   background: rgba(255, 255, 255, 0.9);
   transition: background 0.3s, border-color 0.3s, color 0.3s;
@@ -139,76 +140,34 @@
 
 .drag-drop:hover,
 .drag-drop.hover {
-  background: rgba(0, 255, 204, 0.15);
-  border-color: #00ffcc;
-  color: #00ffcc;
+  background: rgba(218, 208, 208, 0.15);
+
+  color: white;
 }
 
-/* Sell Button */
+
 .sell-form button {
-  background: #00ffcc;
+  background: white;
   color: #111;
-  border: none;
+  
   font-size: 16px;
   padding: 14px 20px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
   transition: background 0.3s, transform 0.3s;
+  border-color: 3px solid black;
 }
 
 .sell-form button:hover {
-  background: #00cc99;
-  transform: scale(1.06);
+  background: black;
+  color: white;
+  transform: scale(1.01);
+   border-color: 4px solid white;
+
 }
 
-/* User Products Table */
-.user-products {
-  max-width: 1200px;
-  margin: 50px auto;
-  padding: 0 15px;
-}
 
-.user-products h3 {
-  margin-bottom: 15px;
-  text-align: center;
-  font-size: 22px;
-  color: #fff;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.65);
-  border-radius: 10px;
-  overflow: hidden;
-  backdrop-filter: blur(6px);
-}
-
-table th,
-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  vertical-align: middle;
-}
-
-table th {
-  background: rgba(255, 255, 255, 0.15);
-  font-weight: 600;
-}
-
-table tr:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-table img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 6px;
-}
 
 /* Footer */
 footer {
@@ -231,10 +190,11 @@ footer {
     <li><a href="buy.html">Buy</a></li>
     <li><a href="sell.html">Sell</a></li>
     <li><a href="trade.html">Trade</a></li>
+    <li><a href="user.html"> User Products</a></li>
     <li>
       <a href="cart.html">
-         🛒 Cart <span id="cartCount" style="background:#a5c6bf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span>
-      </a>
+          🛒 Cart <span id="cartCount" style="background:#48ccaf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span>
+        </a>
     </li>
     <li><button id="logoutBtn">Logout</button></li>
   </ul>
@@ -312,7 +272,7 @@ document.getElementById('sellForm').addEventListener('submit', async e => {
         body: JSON.stringify(product)
       });
       if(!res.ok) throw new Error("Failed to submit product");
-      alert("Product submitted successfully!");
+      alert("Product submitted successfully! Please Check Your Status");
       document.getElementById('sellForm').reset();
       dragDrop.textContent="Drag & Drop Product Image Here or Click to Upload";
       fetchUserProducts();
