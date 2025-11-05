@@ -5,206 +5,40 @@
 <title>Sell Approvals - Admin Panel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-  }
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+body { min-height:100vh; background:linear-gradient(135deg,#000,#111); color:#fff; }
 
-  body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #000000, #111111);
-    color: #fff;
-  }
+.navbar { width:100%; display:flex; justify-content:space-between; align-items:center; padding:15px 40px; background:rgba(0,0,0,0.85); backdrop-filter:blur(6px); position:fixed; top:0; left:0; z-index:1000; box-shadow:0 4px 10px rgba(0,255,204,0.15); }
+.navbar h1 { font-size:26px; color:#00ffcc; letter-spacing:1px; text-transform:uppercase; }
+.navbar ul { list-style:none; display:flex; gap:20px; align-items:center; }
+.navbar ul li a { text-decoration:none; color:#fff; padding:10px 16px; border-radius:8px; transition:0.3s ease; font-weight:500; }
+#logoutBtn { background:#e53935; color:#fff; padding:10px 18px; border-radius:6px; transition:0.3s ease; }
+#logoutBtn:hover { background:#ff4444; transform:scale(1.1); }
 
-  /* Navbar */
-  .navbar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 40px;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(6px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 10px rgba(0, 255, 204, 0.15);
-  }
+.main { margin-top:110px; padding:30px 40px; }
+.main h2 { color:#00ffcc; text-align:center; margin-bottom:25px; font-size:26px; letter-spacing:1px; }
 
-  .navbar h1 {
-    font-size: 26px;
-    color: #00ffcc;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+table { width:100%; border-collapse:collapse; background:rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+thead { background:rgba(0,255,204,0.1); }
+th, td { padding:14px 16px; text-align:left; color:#ddd; border-bottom:1px solid rgba(255,255,255,0.1); }
+th { color:#00ffcc; text-transform:uppercase; font-size:14px; letter-spacing:0.5px; }
+tr:hover { background:rgba(255,255,255,0.12); transition:0.3s; }
 
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
+img.product-img { width:60px; height:60px; object-fit:cover; border-radius:6px; cursor:pointer; transition:0.3s; }
+img.product-img:hover { transform:scale(1.1); }
 
-  .navbar ul li a {
-    text-decoration: none;
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 8px;
-    transition: 0.3s ease;
-    font-weight: 500;
-  }
+.btn-approve, .btn-reject, .btn-delete { padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-weight:500; transition:0.3s ease; margin-right:5px; }
+.btn-approve { background:#00ffcc; color:#000; } .btn-approve.approved { background:#4caf50; color:#fff; }
+.btn-approve:hover { background:#fff; transform:scale(1.05); }
+.btn-reject { background:#e53935; color:#fff; } .btn-reject.rejected { background:#9c27b0; color:#fff; }
+.btn-reject:hover { background:#ff4444; transform:scale(1.05); }
+.btn-delete { background:#888; color:#fff; }
+.btn-delete:hover { background:#555; transform:scale(1.05); }
 
- 
+#toast { position:fixed; bottom:30px; right:30px; background:#333; color:#fff; padding:15px 25px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.5); opacity:0; transform:translateY(50px); transition:0.4s; z-index:10000; }
+#toast.show { opacity:1; transform:translateY(0); }
 
-  /* Logout button */
-  #logoutBtn {
-    background: #e53935;
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 6px;
-    transition: 0.3s ease;
-  }
-
-  #logoutBtn:hover {
-    background: #ff4444;
-    transform: scale(1.1);
-  }
-
-
-/* Main Content Layout */
-.main {
-  margin-top: 110px;
-  padding: 30px 40px;
-}
-
-.main h2 {
-  color: #00ffcc;
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 26px;
-  letter-spacing: 1px;
-}
-
-/* Table Design */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-thead {
-  background: rgba(0, 255, 204, 0.1);
-}
-
-th, td {
-  padding: 14px 16px;
-  text-align: left;
-  color: #ddd;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-th {
-  color: #00ffcc;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-}
-
-tr:hover {
-  background: rgba(255, 255, 255, 0.12);
-  transition: 0.3s;
-}
-
-/* Action Buttons */
-.btn-approve,
-.btn-reject,
-.btn-delete {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: 0.3s ease;
-  margin-right: 5px;
-}
-
-.btn-approve {
-  background: #00ffcc;
-  color: #000;
-}
-
-.btn-approve.approved {
-  background: #4caf50;
-  color: #fff;
-}
-
-.btn-approve:hover {
-  background: #fff;
-  transform: scale(1.05);
-}
-
-.btn-reject {
-  background: #e53935;
-  color: #fff;
-}
-
-.btn-reject.rejected {
-  background: #9c27b0;
-  color: #fff;
-}
-
-.btn-reject:hover {
-  background: #ff4444;
-  transform: scale(1.05);
-}
-
-.btn-delete {
-  background: #888;
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background: #555;
-  transform: scale(1.05);
-}
-
-/* Toast Notification */
-#toast {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: #333;
-  color: #fff;
-  padding: 15px 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transform: translateY(50px);
-  transition: 0.4s;
-  z-index: 10000;
-}
-
-#toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Footer */
-footer {
-  margin-top: 50px;
-  text-align: center;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.75);
-  color: #aaa;
-  font-size: 14px;
-}
-
+footer { margin-top:50px; text-align:center; padding:20px; background:rgba(0,0,0,0.75); color:#aaa; font-size:14px; }
 </style>
 </head>
 <body>
@@ -212,14 +46,13 @@ footer {
 <nav class="navbar">
   <h1>Sell Approvals</h1>
   <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="manage-users.html">Manage Users</a></li>
-      <li><a href="product-listing.html">Product Listing</a></li>
-     
-      <li><a href="sell-approval.html">Sell Approvals</a></li>
-      <li><a href="trade-approval.html">Trade Approvals</a></li> 
-      <li><a href="buy-approval.html">Buy Approvals</a></li>
-      <li><a href="#" id="logoutBtn">Logout</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="manage-users.html">Manage Users</a></li>
+    <li><a href="product-listing.html">Product Listing</a></li>
+    <li><a href="sell-approval.html">Sell Approvals</a></li>
+    <li><a href="trade-approval.html">Trade Approvals</a></li>
+    <li><a href="buy-approval.html">Buy Approvals</a></li>
+    <li><a href="#" id="logoutBtn">Logout</a></li>
   </ul>
 </nav>
 
@@ -227,7 +60,16 @@ footer {
   <h2>Pending Sell Requests</h2>
   <table>
     <thead>
-      <tr><th>ID</th><th>Product</th><th>Seller</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+      <tr>
+        <th>Image</th>
+        <th>ID</th>
+        <th>Product</th>
+        
+        <th>Seller</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody id="sellRequestsTable"></tbody>
   </table>
@@ -238,32 +80,40 @@ footer {
 <script>
 const API_URL = "http://localhost:5000/api/sell";
 
-function showToast(msg) {
+function showToast(msg){
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  setTimeout(()=>toast.classList.remove('show'),2500);
 }
 
-async function fetchSellRequests() {
+async function fetchSellRequests(){
   const table = document.getElementById('sellRequestsTable');
-  table.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#aaa;">Loading...</td></tr>`;
-  try {
+  table.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#aaa;">Loading...</td></tr>`;
+
+  try{
     const res = await fetch(API_URL);
     const products = await res.json();
-    const userProducts = products.filter(p => (p.sellerName || "").toLowerCase() !== "admin");
+    const userProducts = products.filter(p => (p.sellerName||"").toLowerCase()!=="admin");
 
-    table.innerHTML = '';
-    if(userProducts.length === 0) {
-      table.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#aaa;">No sell requests found.</td></tr>`;
+    table.innerHTML='';
+    if(userProducts.length===0){
+      table.innerHTML=`<tr><td colspan="7" style="text-align:center;color:#aaa;">No sell requests found.</td></tr>`;
       return;
     }
 
-    userProducts.forEach(p => {
+    userProducts.forEach(p=>{
+      const imageSrc = p.image ? p.image : 'placeholder.jpg';
       const tr = document.createElement('tr');
-      tr.innerHTML = `
+      tr.innerHTML=`
+        
+       
+        <td><img src="${imageSrc}" alt="${p.title}" class="product-img"></td>
+        
         <td>${p._id}</td>
         <td>${p.title}</td>
+
+      
         <td>${p.sellerName}</td>
         <td>₹${p.price}</td>
         <td>${p.status}</td>
@@ -279,81 +129,51 @@ async function fetchSellRequests() {
       const btnReject = tr.querySelector('.btn-reject');
       const btnDelete = tr.querySelector('.btn-delete');
 
-      // Initialize button colors
-      updateButtonColors(p, btnApprove, btnReject);
+      updateButtonColors(p,btnApprove,btnReject);
 
-      // Approve
-      btnApprove.addEventListener('click', async () => {
-        const ok = await updateStatus(p._id, 'Approved');
-        if(ok){
-          p.status = 'Approved';
-          tr.cells[4].textContent = 'Approved';
-          updateButtonColors(p, btnApprove, btnReject);
-          showToast(`${p.title} approved`);
-        }
+      btnApprove.addEventListener('click', async ()=>{
+        const ok = await updateStatus(p._id,'Approved');
+        if(ok){ p.status='Approved'; tr.cells[5].textContent='Approved'; updateButtonColors(p,btnApprove,btnReject); showToast(`${p.title} approved`);}
       });
 
-      // Reject
-      btnReject.addEventListener('click', async () => {
-        const ok = await updateStatus(p._id, 'Rejected');
-        if(ok){
-          p.status = 'Rejected';
-          tr.cells[4].textContent = 'Rejected';
-          updateButtonColors(p, btnApprove, btnReject);
-          showToast(`${p.title} rejected`);
-        }
+      btnReject.addEventListener('click', async ()=>{
+        const ok = await updateStatus(p._id,'Rejected');
+        if(ok){ p.status='Rejected'; tr.cells[5].textContent='Rejected'; updateButtonColors(p,btnApprove,btnReject); showToast(`${p.title} rejected`);}
       });
 
-      // Delete
-      btnDelete.addEventListener('click', async () => { 
-        if(confirm(`Delete ${p.title}?`)) {
-          await deleteProduct(p._id);
-        }
+      btnDelete.addEventListener('click', async ()=>{
+        if(confirm(`Delete ${p.title}?`)) await deleteProduct(p._id);
       });
+
+      tr.querySelector('.product-img').addEventListener('click',()=>window.open(imageSrc,'_blank'));
     });
-
-  } catch(err) { console.error(err); }
-}
-
-// Updates button colors based on current status but buttons remain clickable
-function updateButtonColors(product, btnApprove, btnReject) {
-  if(product.status === 'Approved') {
-    btnApprove.classList.add('approved');
-    btnReject.classList.remove('rejected');
-  } else if(product.status === 'Rejected') {
-    btnReject.classList.add('rejected');
-    btnApprove.classList.remove('approved');
-  } else {
-    btnApprove.classList.remove('approved');
-    btnReject.classList.remove('rejected');
-  }
-}
-
-async function updateStatus(id,status) {
-  try {
-    const res = await fetch(`${API_URL}/${id}`, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ status })
-    });
-    if(!res.ok) throw new Error("Failed to update status");
-    return true;
-  } catch(err){ console.error(err); return false; }
-}
-
-async function deleteProduct(id){
-  try {
-    const res = await fetch(`${API_URL}/${id}`, { method:'DELETE' });
-    if(!res.ok) throw new Error("Failed to delete product");
-    showToast("Product deleted");
-    fetchSellRequests();
   } catch(err){ console.error(err); }
 }
 
-// Logout
-document.getElementById('logoutBtn').addEventListener('click', ()=>{
-  localStorage.removeItem('user'); window.location.href='index.html';
-});
+function updateButtonColors(product, btnApprove, btnReject){
+  if(product.status==='Approved'){ btnApprove.classList.add('approved'); btnReject.classList.remove('rejected'); }
+  else if(product.status==='Rejected'){ btnReject.classList.add('rejected'); btnApprove.classList.remove('approved'); }
+  else { btnApprove.classList.remove('approved'); btnReject.classList.remove('rejected'); }
+}
+
+async function updateStatus(id,status){
+  try{
+    const res = await fetch(`${API_URL}/${id}`,{ method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status}) });
+    if(!res.ok) throw new Error("Failed to update status");
+    return true;
+  }catch(err){ console.error(err); return false; }
+}
+
+async function deleteProduct(id){
+  try{
+    const res = await fetch(`${API_URL}/${id}`,{ method:'DELETE' });
+    if(!res.ok) throw new Error("Failed to delete product");
+    showToast("Product deleted");
+    fetchSellRequests();
+  }catch(err){ console.error(err); }
+}
+
+document.getElementById('logoutBtn').addEventListener('click',()=>{ localStorage.removeItem('user'); window.location.href='index.html'; });
 
 fetchSellRequests();
 </script>

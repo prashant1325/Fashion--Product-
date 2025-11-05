@@ -5,179 +5,232 @@
 <title>Sell</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+  /* Global Reset */
   * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
 
-    body {
-      min-height: 100vh;
-      background: url("img/homebg.webp") no-repeat center center/cover;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-    }
+  body {
+    min-height: 100vh;
+    background: url("img/homebg.webp") no-repeat center center/cover;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+  }
 
-    /* Navbar */
-    .navbar {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 50px;
-      position: fixed;
-      top: 0;
-      left: 0;
-       background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-     
-    }
+  /* Navbar */
+  .navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
 
-    .navbar h2 {
-      color: #00ffcc;
-      font-size: 26px;
-      font-weight: 700;
-    }
+  .navbar h2 {
+    color: #00ffcc;
+    font-size: 26px;
+    font-weight: 700;
+  }
 
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 25px;
-    }
+  .navbar ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+  }
 
-    .navbar ul li a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-      font-size: 16px;
-      padding: 8px 14px;
-      border-radius: 6px;
-      transition: 0.3s;
-    }
+  .navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
 
-    .navbar ul li button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      background: #ff4d4d;
-      color: #fff;
-      cursor: pointer;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    .navbar ul li button:hover {
-      background: #cc0000;
-    }
-
-
-
-.page-title {
-  margin-top: 160px;
-  text-align: center;
-  font-size: 32px;
-  font-weight: 700;
- text-shadow: 6px 5px 20px rgb(0, 0, 0);
-  color: black;
-}
-
-
-.sell-form {
-  width: 100%;
-  max-width: 600px;
-  margin: 60px auto;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  background: rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(8px);
-  border-radius: 20px;
-  border: 2px solid black;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-.sell-form input,
-.sell-form textarea {
-  padding: 12px 15px;
-  border-radius: 10px;
-    border: 2px solid black;
-  font-size: 16px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  color: black;
-  transition: border 0.3s, background 0.3s;
-}
-
-.sell-form input:focus,
-.sell-form textarea:focus {
  
-  background: #fff;
-}
 
-.sell-form textarea {
-  min-height: 120px;
-  resize: vertical;
-}
+  .navbar ul li button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #ff4d4d;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+  }
 
+  .navbar ul li button:hover {
+    background: #cc0000;
+  }
 
-.drag-drop {
-  border: 3px dashed black;
-  border-radius: 12px;
-  padding: 25px;
-  text-align: center;
-  font-size: 16px;
-  color: black;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.9);
-  transition: background 0.3s, border-color 0.3s, color 0.3s;
-}
+  /* Page Title */
+  .page-title {
+    margin-top: 160px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    text-shadow: 6px 5px 20px rgba(0, 0, 0, 0.7);
+    color: black;
+  }
 
-.drag-drop:hover,
-.drag-drop.hover {
-  background: rgba(218, 208, 208, 0.15);
+  /* Sell Form */
+  .sell-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    border: 2px solid black;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .sell-form input,
+  .sell-form textarea {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 16px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    color: black;
+    transition: border 0.3s, background 0.3s;
+  }
+
+  .sell-form input:focus,
+  .sell-form textarea:focus {
+    background: #fff;
+   
+    outline: none;
+  }
+
+  .sell-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  /* Drag & Drop Area */
+  .drag-drop {
+    border: 3px dashed black;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    font-size: 16px;
+    color: black;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+  }
+
+  .drag-drop:hover,
+  .drag-drop.hover {
+   background: rgba(218, 208, 208, 0.15);
 
   color: white;
-}
+  }
 
+  /* Submit Button */
+  .sell-form button {
+    background: white;
+    color: #111;
+    font-size: 16px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.3s, transform 0.3s, border 0.3s;
+    border: 3px solid black;
+  }
 
-.sell-form button {
-  background: white;
-  color: #111;
-  
-  font-size: 16px;
-  padding: 14px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.3s, transform 0.3s;
-  border-color: 3px solid black;
-}
-
-.sell-form button:hover {
-  background: black;
+  .sell-form button:hover {
+      background: black;
   color: white;
   transform: scale(1.01);
    border-color: 4px solid white;
+  }
 
-}
+  /* User Products Table */
+  .user-products {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+  }
 
+  .user-products table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #111;
+  }
 
+  .user-products th,
+  .user-products td {
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+  }
 
-/* Footer */
-footer {
-  margin-top: auto;
-  background: rgba(0, 0, 0, 0.4);
-  text-align: center;
-  padding: 16px;
-  color: #ccc;
-  font-size: 14px;
-}
+  .user-products img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: auto;
+    background: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    padding: 16px;
+    color: #ccc;
+    font-size: 14px;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 10px 20px;
+    }
+
+    .navbar h2 {
+      font-size: 22px;
+    }
+
+    .navbar ul {
+      gap: 15px;
+    }
+
+    .page-title {
+      font-size: 28px;
+    }
+
+    .sell-form {
+      margin: 40px 20px;
+      padding: 20px;
+    }
+  }
 </style>
 
 </head>
@@ -190,12 +243,8 @@ footer {
     <li><a href="buy.html">Buy</a></li>
     <li><a href="sell.html">Sell</a></li>
     <li><a href="trade.html">Trade</a></li>
-    <li><a href="user.html"> User Products</a></li>
-    <li>
-      <a href="cart.html">
-          🛒 Cart <span id="cartCount" style="background:#48ccaf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span>
-        </a>
-    </li>
+    <li><a href="user.html">User Products</a></li>
+    <li><a href="cart.html">🛒 Cart <span id="cartCount" style="background:#48ccaf;color:#000;padding:2px 6px;border-radius:25%;font-size:12px;">0</span></a></li>
     <li><button id="logoutBtn">Logout</button></li>
   </ul>
 </nav>
@@ -210,8 +259,8 @@ footer {
   <input type="file" id="productImage" accept="image/*" style="display:none;" required>
   <button type="submit">Add Product</button>
 </form>
-<!-- 
-<div class="user-products">
+
+<!-- <div class="user-products">
   <h3>Your Submitted Products</h3>
   <table>
     <thead>
@@ -230,10 +279,9 @@ footer {
 <footer>© 2025 UpStyle Marketplace | Designed with ♻️ Sustainable Innovation</footer>
 
 <script>
-const API_URL = "http://localhost:5000/api/sell"; // Backend sell API
+const API_URL = "http://localhost:5000/api/sell";
 const user = JSON.parse(localStorage.getItem('user')) || {name:"Anonymous"};
 
-// Logout
 document.getElementById('logoutBtn').addEventListener('click', () => {
   localStorage.removeItem('user'); window.location.href='index.html';
 });
@@ -259,7 +307,7 @@ document.getElementById('sellForm').addEventListener('submit', async e => {
   const title = document.getElementById('productName').value.trim();
   const description = document.getElementById('productDescription').value.trim();
   const price = document.getElementById('productPrice').value.trim();
-  if(!title||!description||!price) return alert("All fields required");
+  if(!title || !description || !price || !productImage.files[0]) return alert("All fields required");
 
   const reader = new FileReader();
   reader.onload = async function(event){
@@ -289,9 +337,9 @@ async function fetchUserProducts() {
     const res = await fetch(API_URL);
     const products = await res.json();
     const userProducts = products.filter(p => p.sellerName === user.name);
-    container.innerHTML = userProducts.length===0? 
-      `<tr><td colspan="5" style="text-align:center;">No products submitted yet.</td></tr>`:
-      userProducts.map(p=>`
+    container.innerHTML = userProducts.length===0 ? 
+      `<tr><td colspan="5" style="text-align:center;">No products submitted yet.</td></tr>` :
+      userProducts.map(p => `
         <tr>
           <td>${p.image?`<img src="${p.image}">`:'No Image'}</td>
           <td>${p.title}</td>
