@@ -98,43 +98,43 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const regForm = document.getElementById('regForm');
-const toast = document.getElementById('toast');
+  const regForm = document.getElementById('regForm');
+  const toast = document.getElementById('toast');
 
-// Set your deployed backend URL here
-   const API_URL = 'https://fashion-product-6fnr.vercel.app';
+  // Fixed backend URL
+  const BACKEND_URL = 'https://fashion-product-6fnr.vercel.app';
 
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'),3000);
-}
-
-regForm.addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  const role = document.getElementById('role').value;
-
-  if(!role){ showToast("Please select a role"); return; }
-
-  try{
-    const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({name,email,password,role})
-    });
-    const data = await res.json();
-    if(res.ok){
-      showToast("Registered successfully! Redirecting to login...");
-      setTimeout(()=> location.href='login.html',1500);
-    }else showToast(data.msg || "Registration failed");
-  }catch(err){
-    showToast("Server error. Try again later.");
-    console.error(err);
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(()=> toast.classList.remove('show'),3000);
   }
-});
+
+  regForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const role = document.getElementById('role').value;
+
+    if(!role){ showToast("Please select a role"); return; }
+
+    try{
+      const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({name,email,password,role})
+      });
+      const data = await res.json();
+      if(res.ok){
+        showToast("Registered successfully! Redirecting to login...");
+        setTimeout(()=> location.href='login.html',1500);
+      }else showToast(data.msg || "Registration failed");
+    }catch(err){
+      showToast("Server error. Try again later.");
+      console.error(err);
+    }
+  });
 </script>
 
 </body>

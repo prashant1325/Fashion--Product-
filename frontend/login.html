@@ -94,61 +94,63 @@
 <div id="toast" class="toast"></div>
 
 <script>
-   const API_URL = 'https://fashion-product-6fnr.vercel.app';
+  // Fixed backend URL
+  const BACKEND_URL = 'https://fashion-product-6fnr.vercel.app';
 
-const loginForm = document.getElementById('loginForm');
-const toast = document.getElementById('toast');
+  const loginForm = document.getElementById('loginForm');
+  const toast = document.getElementById('toast');
 
-function showToast(msg) {
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  const role = document.getElementById('role').value;
-
-  if (!role) { showToast("Please select a role"); return; }
-
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password, role })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      showToast("Logged in successfully!");
-
-      setTimeout(() => {
-        if (data.user.role === 'admin') location.href = 'admin/admin-dashboard.html';
-        else location.href = 'home.html';
-      }, 1200);
-
-    } else {
-      if (data.msg && data.msg.toLowerCase().includes("not found")) {
-        showToast("Account not found! Redirecting to Register...");
-        setTimeout(() => location.href = 'register.html', 1500);
-      } else if (data.msg && data.msg.toLowerCase().includes("access denied")) {
-        showToast("Access denied! Admins only");
-      } else {
-        showToast(data.msg || "Login failed");
-      }
-    }
-
-  } catch (err) {
-    showToast("Server error. Try again later.");
-    console.error(err);
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
   }
-});
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const role = document.getElementById('role').value;
+
+    if (!role) { showToast("Please select a role"); return; }
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, password, role })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showToast("Logged in successfully!");
+
+        setTimeout(() => {
+          if (data.user.role === 'admin') location.href = 'admin/admin-dashboard.html';
+          else location.href = 'home.html';
+        }, 1200);
+
+      } else {
+        if (data.msg && data.msg.toLowerCase().includes("not found")) {
+          showToast("Account not found! Redirecting to Register...");
+          setTimeout(() => location.href = 'register.html', 1500);
+        } else if (data.msg && data.msg.toLowerCase().includes("access denied")) {
+          showToast("Access denied! Admins only");
+        } else {
+          showToast(data.msg || "Login failed");
+        }
+      }
+
+    } catch (err) {
+      showToast("Server error. Try again later.");
+      console.error(err);
+    }
+  });
 </script>
+
 
 </body>
 </html>
