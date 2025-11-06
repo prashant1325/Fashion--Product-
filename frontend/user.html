@@ -254,9 +254,16 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-  const SELL_API = "http://localhost:5000/api/sell";
-  const TRADE_API = "http://localhost:5000/api/trades";
-  const BASE_URL = "http://localhost:5000";
+// Deployed backend URL
+const API_URL = 'https://fashion-product-6fnr.vercel.app';
+
+
+// API Endpoints
+const SELL_API = `${BASE_URL}/api/sell`;
+const TRADE_API = `${BASE_URL}/api/trades`;
+const CART_API = `${BASE_URL}/api/cart`;
+const FEATURED_API = `${BASE_URL}/api/admin/featured`;
+
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   if(!currentUser){

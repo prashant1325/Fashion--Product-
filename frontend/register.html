@@ -4,81 +4,75 @@
   <meta charset="UTF-8">
   <title>Register - Upcycled Marketplace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
- <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
-  body {
-    min-height:100vh;
-    background: url("img/login.jpg") no-repeat center center/cover;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .auth {
-    background: rgba(255,255,255,0.1);
-    padding:50px 60px;
-    border-radius:20px;
-    box-shadow:0 8px 40px rgba(0,0,0,0.4);
-    text-align:center;
-    width:380px;
-    backdrop-filter: blur(12px);
-    border:2px solid black;
-    position: relative;
-    animation: fadeIn 1s ease-in-out;
-  }
-  @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
-  .icon { font-size:50px; color:#fff; margin-bottom:15px; }
-  h2 { font-size:28px; margin-bottom:20px; color:#fff; font-weight:600; text-shadow:1px 1px 4px rgba(0,0,0,0.5);}
-  form { display:flex; flex-direction:column; gap:15px; }
-  input, select {
-    padding:14px;
-    border-radius:10px;
-    border:2px solid black;
-    outline:none;
-    font-size:15px;
-    background:rgba(255,255,255,0.2);
-    color:black;
-    transition:0.3s;
-  }
-  ::placeholder {
-    color: black;
-    opacity: 1;
-  }
-  input:focus, select:focus {
-    background: rgba(255,255,255,0.3);
-    box-shadow:0 0 8px rgba(0,123,255,0.5);
-  }
-  button {
-    padding:14px;
-    font-size:16px;
-    border-radius:10px;
-    border:2px solid black;
-    cursor:pointer;
-    background:#007bff;
-    color:black;
-    transition:0.3s;
-  }
-  button:hover { background:#0056b3; color:white; }
-  p { margin-top:18px; color:black; font-size:15px; }
-  a { color:#112de2; text-decoration:none; font-weight:500; }
-  a:hover { text-decoration:underline; }
-  .toast {
-    position:fixed;
-    top:25px;
-    right:25px;
-    background: rgba(255,0,0,0.85);
-    color:#fff;
-    padding:10px 18px;
-    border-radius:6px;
-    font-size:14px;
-    opacity:0;
-    pointer-events:none;
-    transition:0.4s;
-    z-index:100;
-  }
-  .toast.show { opacity:1; pointer-events:all; }
-  @media(max-width:480px){
-    .auth{width:90%; padding:35px 25px;}
-    .icon{font-size:40px;}
-  }
-</style>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins",sans-serif; }
+    body {
+      min-height:100vh;
+      background: url("img/login.jpg") no-repeat center center/cover;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .auth {
+      background: rgba(255,255,255,0.1);
+      padding:50px 60px;
+      border-radius:20px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.4);
+      text-align:center;
+      width:380px;
+      backdrop-filter: blur(12px);
+      border:2px solid black;
+      position: relative;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+    .icon { font-size:50px; color:#fff; margin-bottom:15px; }
+    h2 { font-size:28px; margin-bottom:20px; color:#fff; font-weight:600; text-shadow:1px 1px 4px rgba(0,0,0,0.5);}
+    form { display:flex; flex-direction:column; gap:15px; }
+    input, select {
+      padding:14px;
+      border-radius:10px;
+      border:2px solid black;
+      outline:none;
+      font-size:15px;
+      background:rgba(255,255,255,0.2);
+      color:black;
+      transition:0.3s;
+    }
+    ::placeholder { color: black; opacity: 1; }
+    input:focus, select:focus { background: rgba(255,255,255,0.3); box-shadow:0 0 8px rgba(0,123,255,0.5); }
+    button {
+      padding:14px;
+      font-size:16px;
+      border-radius:10px;
+      border:2px solid black;
+      cursor:pointer;
+      background:#007bff;
+      color:black;
+      transition:0.3s;
+    }
+    button:hover { background:#0056b3; color:white; }
+    p { margin-top:18px; color:black; font-size:15px; }
+    a { color:#112de2; text-decoration:none; font-weight:500; }
+    a:hover { text-decoration:underline; }
+    .toast {
+      position:fixed;
+      top:25px;
+      right:25px;
+      background: rgba(255,0,0,0.85);
+      color:#fff;
+      padding:10px 18px;
+      border-radius:6px;
+      font-size:14px;
+      opacity:0;
+      pointer-events:none;
+      transition:0.4s;
+      z-index:100;
+    }
+    .toast.show { opacity:1; pointer-events:all; }
+    @media(max-width:480px){
+      .auth{width:90%; padding:35px 25px;}
+      .icon{font-size:40px;}
+    }
+  </style>
 
   <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
 </head>
@@ -107,6 +101,9 @@
 const regForm = document.getElementById('regForm');
 const toast = document.getElementById('toast');
 
+// Set your deployed backend URL here
+   const API_URL = 'https://fashion-product-6fnr.vercel.app';
+
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
@@ -123,7 +120,7 @@ regForm.addEventListener('submit', async (e)=>{
   if(!role){ showToast("Please select a role"); return; }
 
   try{
-    const res = await fetch('http://localhost:5000/api/auth/register', {
+    const res = await fetch(`${BACKEND_URL}/api/auth/register`, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({name,email,password,role})
@@ -133,7 +130,10 @@ regForm.addEventListener('submit', async (e)=>{
       showToast("Registered successfully! Redirecting to login...");
       setTimeout(()=> location.href='login.html',1500);
     }else showToast(data.msg || "Registration failed");
-  }catch(err){ showToast("Server error. Try again later."); console.error(err);}
+  }catch(err){
+    showToast("Server error. Try again later.");
+    console.error(err);
+  }
 });
 </script>
 
