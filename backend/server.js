@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config(); // ✅ Load .env file
 const connectDB = require('./db');
 
 // ✅ Route imports
@@ -23,18 +24,15 @@ app.use(express.json({ limit: '10mb' })); // support large JSON/base64 images
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 // ✅ API Routes
-app.use("/api/admin", adminRoutes);           // admin routes (featured + buy approvals)
+app.use("/api/admin", adminRoutes);           
 app.use("/api/admin/featured", featuredRoutes);
 app.use("/api/sell", sellRoutes);
 app.use("/api/trades", tradeRoutes);
-app.use("/api/cart", cartRoutes);            // cart routes (add, delete, update-status)
-app.use("/api/auth", authRoutes);            // authentication
+app.use("/api/cart", cartRoutes);            
+app.use("/api/auth", authRoutes);            
 
 // ✅ Root route
 app.get('/', (req, res) => res.send('UpStyle API running 🚀'));
-
-// ✅ Serve frontend (optional)
-// app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ Handle unknown routes
 app.use((req, res) => {

@@ -1,17 +1,21 @@
-// backend/db.js
 const mongoose = require('mongoose');
-
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/upcycled_marketplace';
+require('dotenv').config(); // ✅ Load environment variables
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
+    const mongoURI = process.env.MONGO_URI; // get from .env file
+    if (!mongoURI) {
+      throw new Error('MONGO_URI is missing in .env file');
+    }
+
+    await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error('MongoDB connection error:', err.message);
+
+    console.log('✅ MongoDB connected successfully');
+  } catch (error) {
+    console.error('❌ MongoDB connection error:', error.message);
     process.exit(1);
   }
 };
