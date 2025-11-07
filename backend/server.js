@@ -17,8 +17,28 @@ const app = express();
 // ✅ Connect to MongoDB
 connectDB();
 
+// ✅ Allowed origins for CORS
+const allowedOrigins = [
+  "https://eloquent-rolypoly-c037fd.netlify.app", // your frontend URL
+  "http://localhost:5173", // optional for local testing
+];
+
+// ✅ CORS middleware setup
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed for this origin"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
+);
+
 // ✅ Middleware
-app.use(cors());
 app.use(express.json({ limit: "10mb" })); // support large JSON/base64 images
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
